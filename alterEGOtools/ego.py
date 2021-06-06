@@ -34,6 +34,19 @@ def create_partition():
 
     os.mkdir('/mnt/home')
 
+    #### Install minimal packages
+
+    min_pkg = ['base',
+               'base-devel',
+               'git',
+               'grub',
+               'linux',
+               'networkmanager',
+               'pacman-contrib',
+               'vim']
+    
+    subprocess.run(['pacstrap', '/mnt'], input=' '.join(min_pkg), text=True)
+
     #### Generating the fstab.
 
     subprocess.run(['genfstab', '-U', '/mnt', '>>', '/mnt/etc/fstab'])
