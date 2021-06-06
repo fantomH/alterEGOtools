@@ -49,7 +49,7 @@ def create_partition():
 
     #### Generating the fstab.
 
-    subprocess.run(['genfstab', '-U', '/mnt', '>>', '/mnt/etc/fstab'])
+    subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
 
 def main():
 
