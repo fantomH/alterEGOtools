@@ -7,6 +7,8 @@
 #   description    : Deploy and update alterEGO Linux.
 #------------------------------------------------------------------------------
 
+import argparse
+import os
 import subprocess
 
 def create_partition():
@@ -20,7 +22,33 @@ def create_partition():
 
     subprocess.run(['sfdisk', '/dev/sda'], text=True, input=partition)
 
-out = create_partition()
+    #### Formating the File System.
 
+    subprocess.run(['mkfs.ext4', '/dev/sda1'])
+
+    #### Mounting /dev/sda1 to /mnt.
+
+    subprocess.run(['mount', '/dev/sda1', '/mnt'])
+
+    #### Creating ${HOME}. 
+
+    os.mkdir('/mnt/home')
+
+    #### Generating the fstab.
+
+    subprocess.run(['genfstab', '-U', '/mnt', '>>', '/mnt/etc/fstab'])
+
+def main():
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--deploy_mininal", action="store_true", help="Install a minimal instance of Arch Linux.")
+
+    args = parser.parse_args()
+
+    if args.deploy_mininal:
+        create_partition()
+
+if __name__ == '__name__':
+    main()
 
 #--{ file:FIN }----------------------------------------------------------------
