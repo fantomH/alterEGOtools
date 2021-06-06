@@ -41,14 +41,15 @@ def create_partition():
 def main():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--deploy_mininal", action="store_true", help="Install a minimal instance of Arch Linux.")
+    parser.add_argument("--minimal", action="store_true", help="Install a minimal instance of Arch Linux.")
 
     args = parser.parse_args()
 
-    if args.deploy_mininal:
+    if args.minimal:
         create_partition()
+        # print('hello')
 
-if __name__ == '__name__':
+if __name__ == '__main__':
     main()
 
 #--{ file:FIN }----------------------------------------------------------------
