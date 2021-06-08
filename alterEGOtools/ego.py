@@ -70,8 +70,8 @@ def chroot():
     thread.start()
     thread.join()
     
-    shutil.copy('/root/ego.py', usr_local)
-    subprocess.run(['arch-chroot', '/mnt', 'python', '/usr/local/ego.py', '--sysconfig'])
+    shutil.copy('/root/ego.py', '/mnt/root/ego.py')
+    subprocess.run(['arch-chroot', '/mnt', 'python', '/mnt/root/ego.py', '--sysconfig'])
 
 def sysconfig():
     subprocess.run(['git', 'clone', git_tools, usr_local])
