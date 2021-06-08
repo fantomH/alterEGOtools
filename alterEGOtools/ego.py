@@ -9,7 +9,7 @@
 
 import argparse
 import os
-import shutils
+import shutil
 import subprocess
 import sys
 import threading
@@ -73,8 +73,8 @@ def chroot():
     
     print(thread.getName())
     
-    shutils.copy2('/root/ego.py', '/mnt/usr/local/bin/ego.py')
-    shutils.whatis('git')
+    shutil.copy2('/root/ego.py', '/mnt/usr/local/bin/ego.py')
+    shutil.whatis('git')
     subprocess.run(f'git clone {git_tools} /mnt/usr/local', shell=True)
     # subprocess.run(['arch-chroot', '/mnt', 'python', '/usr/local/alterEGOtools/ego.py', '--sysconfig'])
 
