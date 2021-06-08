@@ -71,11 +71,11 @@ def chroot():
     thread.join()
     
     shutil.copy('/root/ego.py', '/mnt/root/ego.py')
-    subprocess.run(['arch-chroot', '/mnt', 'python', '/mnt/root/ego.py', '--sysconfig'])
+    subprocess.run(['arch-chroot', '/mnt', 'python', '/root/ego.py', '--sysconfig'])
 
 def sysconfig():
-    subprocess.run(['git', 'clone', git_tools, usr_local])
-    subprocess.run(['git', 'clone', git_alterEGO, usr_local])
+    subprocess.run(['git', 'clone', git_tools, usr_local + '/'])
+    subprocess.run(['git', 'clone', git_alterEGO, usr_local + '/'])
     
 def main():
 
