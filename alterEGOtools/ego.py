@@ -11,6 +11,7 @@ import argparse
 import os
 import subprocess
 import sys
+import threading
 
 git_tools = 'https://github.com/fantomH/alterEGOtools.git'
 git_alterEGO = 'https://github.com/fantomH/alterEGO.git'
@@ -56,13 +57,16 @@ def create_partition():
     pacstrap = subprocess.run(['pacstrap', '/mnt'], input=' '.join(min_pkg), text=True).check_returncode
 
     #### Generating the fstab.
-    if pacstrap == 0:
-        subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
+    subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
 
 def chroot():
     '''
     Preparing and changing the root to the new system.
     '''
+
+    thread = threading.Thread(target=create_partition)
+    thread.start()
+    thread.join()
     
     subprocess.run(['git', 'clone', git_tools, '/mnt/usr/local'])
     subprocess.run(['arch-chroot', '/mnt', 'python', '/usr/local/alterEGOtools/ego.py', '--sysconfig'])
