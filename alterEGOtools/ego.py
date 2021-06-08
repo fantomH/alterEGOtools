@@ -9,6 +9,7 @@
 
 import argparse
 import os
+import shutils
 import subprocess
 import sys
 import threading
@@ -64,12 +65,18 @@ def chroot():
     Preparing and changing the root to the new system.
     '''
 
+    print('NOT STARTED YET')
+
     thread = threading.Thread(target=create_partition)
     thread.start()
     thread.join()
     
-    subprocess.run(['git', 'clone', git_tools, '/mnt/usr/local'])
-    subprocess.run(['arch-chroot', '/mnt', 'python', '/usr/local/alterEGOtools/ego.py', '--sysconfig'])
+    print(thread.getName())
+    
+    shutils.copy2('/root/ego.py', '/mnt/usr/local/bin/ego.py')
+    shutils.whatis('git')
+    subprocess.run(f'git clone {git_tools} /mnt/usr/local', shell=True)
+    # subprocess.run(['arch-chroot', '/mnt', 'python', '/usr/local/alterEGOtools/ego.py', '--sysconfig'])
 
 def sysconfig():
     subprocess.run(['git', 'clone', git_alterEGO, usr_local])
