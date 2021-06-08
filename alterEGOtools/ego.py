@@ -53,13 +53,11 @@ def create_partition():
                'python',
                'vim']
     
-    pacstrap = subprocess.run(['pacstrap', '/mnt'], input=' '.join(min_pkg), text=True)
+    pacstrap = subprocess.run(['pacstrap', '/mnt'], input=' '.join(min_pkg), text=True).check_returncode
 
     #### Generating the fstab.
-
-    subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
-
-    return True
+    if pacstrap == 0:
+        subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
 
 def chroot():
     '''
@@ -82,8 +80,7 @@ def main():
 
     if args.minimal:
         create_partition()
-        if create_partition():
-            chroot()
+        chroot()
     if args.sysconfig:
         sysconfig()
 
