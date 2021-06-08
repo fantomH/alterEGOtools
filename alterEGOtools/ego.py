@@ -51,7 +51,6 @@ def create_partition():
                'grub',
                'linux',
                'networkmanager',
-               'pacman-contrib',
                'python',
                'vim']
     
@@ -74,8 +73,8 @@ def chroot():
     subprocess.run(['arch-chroot', '/mnt', 'python', '/root/ego.py', '--sysconfig'])
 
 def sysconfig():
-    subprocess.run(['git', 'clone', git_tools, usr_local + '/'])
-    subprocess.run(['git', 'clone', git_alterEGO, usr_local + '/'])
+    subprocess.run(['git', 'clone', git_tools, local_tools])
+    subprocess.run(['git', 'clone', git_alterEGO, local_alterEGO])
     
 def main():
 
@@ -88,6 +87,7 @@ def main():
 
     if args.minimal:
         create_partition()
+        chroot()
     if args.chroot:
         chroot()
     if args.sysconfig:
