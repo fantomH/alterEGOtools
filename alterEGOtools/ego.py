@@ -55,7 +55,7 @@ def create_partition():
                'python',
                'vim']
     
-    pacstrap = subprocess.run(['pacstrap', '/mnt'], input=' '.join(min_pkg), text=True).check_returncode
+    pacstrap = subprocess.run(['pacstrap', '/mnt'], input=' '.join(min_pkg), text=True)
 
     #### Generating the fstab.
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
