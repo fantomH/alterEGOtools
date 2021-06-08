@@ -55,7 +55,8 @@ def create_partition():
                'python',
                'vim']
     
-    pacstrap = subprocess.run(['pacstrap', '/mnt'], input=' '.join(min_pkg), text=True)
+    cmd = f"pacstrap /mnt {' '.join(min_pkg)}"
+    subprocess.run(cmd, shell=True)
 
     #### Generating the fstab.
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
@@ -65,20 +66,12 @@ def chroot():
     Preparing and changing the root to the new system.
     '''
 
-    print('NOT STARTED YET')
-
     thread = threading.Thread(target=create_partition)
     thread.start()
     thread.join()
     
-
-    print(thread.getName())
-    
-    
-    shutil.copy2('/root/ego.py', '/mnt/usr/local/share/')
-    shutil.which('git')
     subprocess.run(f'git clone {git_tools} /mnt/usr/local', shell=True)
-    # subprocess.run(['arch-chroot', '/mnt', 'python', '/usr/local/alterEGOtools/ego.py', '--sysconfig'])
+    subprocess.run(['arch-chroot', '/mnt', 'python', '/usr/local/alterEGOtools/ego.py', '--sysconfig'])
 
 def sysconfig():
     subprocess.run(['git', 'clone', git_alterEGO, usr_local])
