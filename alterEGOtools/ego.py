@@ -66,9 +66,9 @@ def chroot():
     Preparing and changing the root to the new system.
     '''
 
-    thread = threading.Thread(target=create_partition)
-    thread.start()
-    thread.join()
+    # thread = threading.Thread(target=create_partition)
+    # thread.start()
+    # thread.join()
     
     shutil.copy('/root/ego.py', '/mnt/root/ego.py')
     subprocess.run(['arch-chroot', '/mnt', 'python', '/root/ego.py', '--sysconfig'])
@@ -81,11 +81,14 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--minimal", action="store_true", help="Install a minimal instance of Arch Linux.")
+    parser.add_argument("--chroot", action="store_true", help="Install a minimal instance of Arch Linux.")
     parser.add_argument("--sysconfig", action="store_true", help="Stage 2")
 
     args = parser.parse_args()
 
     if args.minimal:
+        create_partition()
+    if args.chroot:
         chroot()
     if args.sysconfig:
         sysconfig()
