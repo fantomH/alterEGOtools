@@ -10,12 +10,13 @@
 import argparse
 import os
 import subprocess
+import sys
 
 git_tools = 'https://github.com/fantomH/alterEGOtools.git'
 git_alterEGO = 'https://github.com/fantomH/alterEGO.git'
 usr_local = '/usr/local'
 local_tools = f'{usr_local}/alterEGOtools'
-local_alterEGO f'{usr_local}/alterEGO'
+local_alterEGO = f'{usr_local}/alterEGO'
 
 def create_partition():
     partition = '''label: dos
@@ -52,11 +53,13 @@ def create_partition():
                'python',
                'vim']
     
-    subprocess.run(['pacstrap', '/mnt'], input=' '.join(min_pkg), text=True)
+    pacstrap = subprocess.run(['pacstrap', '/mnt'], input=' '.join(min_pkg), text=True)
 
     #### Generating the fstab.
 
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
+
+    return True
 
 def chroot():
     '''
@@ -78,8 +81,9 @@ def main():
     args = parser.parse_args()
 
     if args.minimal:
-        # create_partition()
-        chroot()
+        create_partition()
+        if create_partition():
+            chroot()
     if args.sysconfig:
         sysconfig()
 
