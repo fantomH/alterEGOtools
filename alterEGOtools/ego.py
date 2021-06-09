@@ -60,23 +60,23 @@ def installer(mode):
 
     #### Install minimal packages
 
-    execute(f'pacstrap -U /mnt {' '.join(basic_pkg)}')
+    execute(f"pacstrap /mnt {' '.join(basic_pkg)}")
 
     #### Generating the fstab.
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
 
     shutil.copy('/root/ego.py', '/mnt/root/ego.py')
-    if mode == 'minimal'
+    if mode == 'minimal':
         execute(f'arch-chroot /mnt python /root/ego.py --sysconfigmin')
 
-    execute(f'umount -R /mnt')
-    execute(f'shutdown now') 
+    # execute(f'umount -R /mnt')
+    # execute(f'shutdown now') 
 
 def sysconfig(mode):
     subprocess.run(['git', 'clone', git_tools, local_tools])
 
     if mode == 'beast':
-        execute(f'git clone {git_alterEGO} {local_alterEGO}')
+        execute(f"git clone {git_alterEGO} {local_alterEGO}")
 
     #-----[ TIMEZONE & CLOCK ]
     os.symlink('/usr/share/zoneinfo/America/New_York', '/etc/localtime')
