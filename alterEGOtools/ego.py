@@ -66,7 +66,8 @@ def installer(mode):
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
 
     shutil.copy('/root/ego.py', '/mnt/root/ego.py')
-    subprocess.run(['arch-chroot', '/mnt', 'python', '/root/ego.py', '--sysconfig'])
+    if mode == 'minimal'
+        execute(f'arch-chroot /mnt python /root/ego.py --sysconfigmin')
 
     execute(f'umount -R /mnt')
     execute(f'shutdown now') 
@@ -149,15 +150,14 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--minimal", action="store_true", help="Install a minimal instance of Arch Linux.")
-    parser.add_argument("--sysconfig", action="store_true", help="Stage 2")
+    parser.add_argument("--sysconfigmin", action="store_true", help="Stage 2")
 
     args = parser.parse_args()
 
     if args.minimal:
-        mode = 'minimal'
-        installer(mode=mode)
-    if args.sysconfig:
-        sysconfig(mode=mode)
+        installer(mode='minimal')
+    if args.sysconfigmin:
+        sysconfig(mode='minimal')
 
 if __name__ == '__main__':
     main()
