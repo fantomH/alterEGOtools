@@ -15,17 +15,27 @@ import subprocess
 import sys
 import threading
 
+#----------{ GLOBAL VARIABLES }
 git_tools = 'https://github.com/fantomH/alterEGOtools.git'
 git_alterEGO = 'https://github.com/fantomH/alterEGO.git'
 usr_local = '/usr/local'
 local_tools = f'{usr_local}/alterEGOtools'
 local_alterEGO = f'{usr_local}/alterEGO'
 
+basic_pkg = ['base',
+            'base-devel',
+            'git',
+            'grub',
+            'linux',
+            'networkmanager',
+            'python',
+            'vim']
+
 def execute(cmd):
     args = shlex.split(cmd)
     subprocess.run(args)
 
-def create_partition():
+def installer(mode):
     partition = '''label: dos
                    device: /dev/sda
                    unit: sectors
@@ -50,40 +60,22 @@ def create_partition():
 
     #### Install minimal packages
 
-    min_pkg = ['base',
-               'base-devel',
-               'git',
-               'grub',
-               'linux',
-               'networkmanager',
-               'python',
-               'vim']
-    
-    cmd = f"pacstrap /mnt {' '.join(min_pkg)}"
-    subprocess.run(cmd, shell=True)
+    execute(f'pacstrap -U /mnt {' '.join(basic_pkg)}')
 
     #### Generating the fstab.
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
 
-def chroot():
-    '''
-    Preparing and changing the root to the new system.
-    '''
-
-    # thread = threading.Thread(target=create_partition)
-    # thread.start()
-    # thread.join()
-    
     shutil.copy('/root/ego.py', '/mnt/root/ego.py')
     subprocess.run(['arch-chroot', '/mnt', 'python', '/root/ego.py', '--sysconfig'])
 
     execute(f'umount -R /mnt')
     execute(f'shutdown now') 
 
-
-def sysconfig():
+def sysconfig(mode):
     subprocess.run(['git', 'clone', git_tools, local_tools])
-    subprocess.run(['git', 'clone', git_alterEGO, local_alterEGO])
+
+    if mode == 'beast':
+        execute(f'git clone {git_alterEGO} {local_alterEGO}')
 
     #-----[ TIMEZONE & CLOCK ]
     os.symlink('/usr/share/zoneinfo/America/New_York', '/etc/localtime')
@@ -120,7 +112,7 @@ def sysconfig():
 
     print(':: Configuring users and passwords...')
     root_passwd = 'toor'
-    subprocess.run(passwd, input=f'{root_passwd}\n{root_passwd}\n')
+    subprocess.run(['passwd'], input=f'{root_passwd}\n{root_passwd}\n', text=True)
 
     # printf '%s\n' " -> Adding sudo user..."
     # useradd -m -g users -G wheel ${user} 
@@ -149,25 +141,23 @@ def sysconfig():
 
     #-----[ VIRTUALBOX VM OPTIONS ]
 
-    execute(f'systemctl start vboxservice.service')
-    execute(f'systemctl enable vboxservice.service')
+    if mode == 'beast':
+        execute(f'systemctl start vboxservice.service')
+        execute(f'systemctl enable vboxservice.service')
     
 def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--minimal", action="store_true", help="Install a minimal instance of Arch Linux.")
-    parser.add_argument("--chroot", action="store_true", help="Install a minimal instance of Arch Linux.")
     parser.add_argument("--sysconfig", action="store_true", help="Stage 2")
 
     args = parser.parse_args()
 
     if args.minimal:
-        create_partition()
-        chroot()
-    if args.chroot:
-        chroot()
+        mode = 'minimal'
+        installer(mode=mode)
     if args.sysconfig:
-        sysconfig()
+        sysconfig(mode=mode)
 
 if __name__ == '__main__':
     main()
