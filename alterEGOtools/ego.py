@@ -3,7 +3,7 @@
 #
 # ego.py
 #   created        : 2021-06-05 00:03:38 UTC
-#   updated        : 2021-06-05 00:03:43 UTC
+#   updated        : 2021-06-09 11:51:36 UTC
 #   description    : Deploy and update alterEGO Linux.
 #------------------------------------------------------------------------------
 
@@ -31,9 +31,16 @@ basic_pkg = ['base',
             'python',
             'vim']
 
+beast_pkg = ['firefox',
+             'wget']
+
 def execute(cmd):
     args = shlex.split(cmd)
     subprocess.run(args)
+
+def pacman(pkg_list):
+    pkgs = ' '.join(pkg_list)
+    execute(f"pacman -Syu --noconfirm --needed {pkgs}")
 
 def installer(mode):
     partition = '''label: dos
@@ -48,11 +55,11 @@ def installer(mode):
 
     #### Formating the File System.
 
-    subprocess.run(['mkfs.ext4', '/dev/sda1'])
+    execute(f"mkfs.ext4 /dev/sda1")
 
     #### Mounting /dev/sda1 to /mnt.
 
-    subprocess.run(['mount', '/dev/sda1', '/mnt'])
+    execute(f"mount /dev/sda1 /mnt")
 
     #### Creating ${HOME}. 
 
@@ -67,13 +74,15 @@ def installer(mode):
 
     shutil.copy('/root/ego.py', '/mnt/root/ego.py')
     if mode == 'minimal':
-        execute(f'arch-chroot /mnt python /root/ego.py --sysconfigmin')
+        execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
+    elif mode == 'beast':
+        execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
     # execute(f'umount -R /mnt')
     # execute(f'shutdown now') 
 
 def sysconfig(mode):
-    subprocess.run(['git', 'clone', git_tools, local_tools])
+    execute(f"git clone {git_tools} {local_tools}")
 
     if mode == 'beast':
         execute(f"git clone {git_alterEGO} {local_alterEGO}")
@@ -132,6 +141,9 @@ def sysconfig(mode):
 
     #-----[ PACKAGES INSTALL ]
 
+    if mode == 'beast':
+        pacman(beast_pkg)
+
     #-----[ YAY ]
 
     #-----[ BOOTLOADER ]
@@ -149,15 +161,18 @@ def sysconfig(mode):
 def main():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--minimal", action="store_true", help="Install a minimal instance of Arch Linux.")
-    parser.add_argument("--sysconfigmin", action="store_true", help="Stage 2")
+    parser.add_argument("--install", type=str, choices=['minimal', 'beast'], help="Install AlterEGO Linux.")
+    parser.add_argument("--sysconfig", type=str, choices=['minimal', 'beast'], help="Initiate the system configuration after the Installer.")
 
     args = parser.parse_args()
 
-    if args.minimal:
-        installer(mode='minimal')
-    if args.sysconfigmin:
-        sysconfig(mode='minimal')
+    if args.install:
+        mode = args.install
+        print(f":: This will install AlterEGO Linux in {mode} mode...")
+        installer(mode)
+    if args.sysconfig:
+        mode = args.sysconfig
+        sysconfig(mode)
 
 if __name__ == '__main__':
     main()
