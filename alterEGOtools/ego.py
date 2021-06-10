@@ -22,6 +22,12 @@ usr_local = '/usr/local'
 local_tools = f'{usr_local}/alterEGOtools'
 local_alterEGO = f'{usr_local}/alterEGO'
 
+timezone = 'America/New_York'
+hostname = 'pc1'
+root_passwd = 'toor'
+user = 'ghost'
+user_passwd = 'password1'
+
 basic_pkg = ['base',
             'base-devel',
             'git',
@@ -37,6 +43,9 @@ beast_pkg = ['firefox',
 def execute(cmd):
     args = shlex.split(cmd)
     subprocess.run(args)
+
+def pacstrap():
+    execute(f"pacstrap /mnt {' '.join(basic_pkg)}")
 
 def pacman(pkg_list):
     pkgs = ' '.join(pkg_list)
@@ -67,7 +76,7 @@ def installer(mode):
 
     #### Install minimal packages
 
-    execute(f"pacstrap /mnt {' '.join(basic_pkg)}")
+    pacstrap()
 
     #### Generating the fstab.
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
@@ -88,7 +97,7 @@ def sysconfig(mode):
         execute(f"git clone {git_alterEGO} {local_alterEGO}")
 
     #-----[ TIMEZONE & CLOCK ]
-    os.symlink('/usr/share/zoneinfo/America/New_York', '/etc/localtime')
+    os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
     execute(f'timedatectl set-ntp true')
     execute(f'hwclock --systohc --utc')
 
@@ -105,7 +114,7 @@ def sysconfig(mode):
 
     print(':: Setting up network...')
     with open('/etc/hostname', 'w') as etc_hostname:
-        etc_hostname.write('pc1')
+        etc_hostname.write(hostname)
     with open('/etc/hosts', 'w') as etc_hosts:
         etc_hosts.write('''
 127.0.0.1	localhost
@@ -121,17 +130,14 @@ def sysconfig(mode):
     #-----[ USERS and PASSWORDS ]
 
     print(':: Configuring users and passwords...')
-    root_passwd = 'toor'
     subprocess.run(['passwd'], input=f'{root_passwd}\n{root_passwd}\n', text=True)
 
-    # printf '%s\n' " -> Adding sudo user..."
-    # useradd -m -g users -G wheel ${user} 
-    # printf "${user_passwd}\n${user_passwd}\n" | passwd ${user}
-    # sleep 1
+    if mode == 'beast':
+        execute(f'useradd -m -g users -G wheel {user}') 
+        subprocess.run(['passwd', {user}], input=f'{user_passwd}\n{user_passwd}\n', text=True)
 
-    # printf '%s\n' " -> Enabling sudoers..."
-    # sed -i 's/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/' /etc/sudoers
-    # sleep 1
+        print(f':: Enabling sudoers...')
+        execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
 
     #-----[ SHARED RESOURCES ]
 
