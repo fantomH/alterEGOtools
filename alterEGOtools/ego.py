@@ -134,7 +134,7 @@ def sysconfig(mode):
 
     if mode == 'beast':
         execute(f'useradd -m -g users -G wheel {user}') 
-        subprocess.run(['passwd', {user}], input=f'{user_passwd}\n{user_passwd}\n', text=True)
+        subprocess.run(['passwd', user], input=f'{user_passwd}\n{user_passwd}\n', text=True)
 
         print(f':: Enabling sudoers...')
         execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
