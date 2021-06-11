@@ -3,7 +3,7 @@
 #
 # ego.py
 #   created        : 2021-06-05 00:03:38 UTC
-#   updated        : 2021-06-09 11:51:36 UTC
+#   updated        : 2021-06-11 08:51:18 UTC
 #   description    : Deploy and update alterEGO Linux.
 #------------------------------------------------------------------------------
 
@@ -45,11 +45,26 @@ def execute(cmd):
     subprocess.run(args)
 
 def pacstrap():
-    execute(f"pacstrap /mnt {' '.join(basic_pkg)}")
+    pacstrap = execute(f"pacstrap /mnt {' '.join(basic_pkg)}")
+
+    print(f"returncode is:\t{pacstrap.returncode}")
+    print(f"stdout is:\t{pacstrap.stdout}")
+    print(f"stderr is:\t{pacstrap.stderr}")
+    print(f"check_returncode is:\t{pacstrap.check_returncode()}")
 
 def pacman(pkg_list):
     pkgs = ' '.join(pkg_list)
     execute(f"pacman -Syu --noconfirm --needed {pkgs}")
+
+def git(git_repository, local_directory):
+
+    if not os.path.isdir(local_directory):
+        execute(f"git clone {git_repository} {local_directory}")
+    else:
+        execute(f"git -C {local_directory} pull")
+
+def testrerun(string):
+    print(string)
 
 def installer(mode):
     partition = '''label: dos
@@ -91,10 +106,16 @@ def installer(mode):
     # execute(f'shutdown now') 
 
 def sysconfig(mode):
-    execute(f"git clone {git_tools} {local_tools}")
+
+    #-----[ GIT REPOSITORIES ]
+    print(f":: Fetching AlterEGO tools, config and other stuff...")
+
+    print(f" -> Pulling {git_tools}...")
+    git(git_tools, local_tools)
 
     if mode == 'beast':
-        execute(f"git clone {git_alterEGO} {local_alterEGO}")
+        print(f" -> Pulling {git_alterEGO}")
+        git(git_alterEGO, local_alterEGO)
 
     #-----[ TIMEZONE & CLOCK ]
     os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
@@ -122,7 +143,7 @@ def sysconfig(mode):
 127.0.1.1	pc1.localdomain	pc1
 ''')
 
-    print(' -> Enabling NetworkManager daemon')
+    print(' -> Enabling NetworkManager daemon...')
     execute(f'systemctl enable NetworkManager.service')
 
     #-----[ POPULATING /etc/skel ]
@@ -130,13 +151,16 @@ def sysconfig(mode):
     #-----[ USERS and PASSWORDS ]
 
     print(':: Configuring users and passwords...')
+    print(' -> Setting password for root user...')
     subprocess.run(['passwd'], input=f'{root_passwd}\n{root_passwd}\n', text=True)
 
     if mode == 'beast':
+        print(f' -> Creating user {user}...')
         execute(f'useradd -m -g users -G wheel {user}') 
+        print(f' -> Setting password for {user}...')
         subprocess.run(['passwd', user], input=f'{user_passwd}\n{user_passwd}\n', text=True)
 
-        print(f':: Enabling sudoers...')
+        print(f' -> Enabling sudoers...')
         execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
 
     #-----[ SHARED RESOURCES ]
@@ -169,6 +193,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--install", type=str, choices=['minimal', 'beast'], help="Install AlterEGO Linux.")
     parser.add_argument("--sysconfig", type=str, choices=['minimal', 'beast'], help="Initiate the system configuration after the Installer.")
+    parser.add_argument("--rerun", type=str, help="Until I figure out things...")
 
     args = parser.parse_args()
 
@@ -179,6 +204,9 @@ def main():
     if args.sysconfig:
         mode = args.sysconfig
         sysconfig(mode)
+    if args.rerun:
+        eval(args.rerun)
+        
 
 if __name__ == '__main__':
     main()
