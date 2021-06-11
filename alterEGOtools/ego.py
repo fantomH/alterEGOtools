@@ -45,12 +45,10 @@ def execute(cmd):
     subprocess.run(args)
 
 def pacstrap():
-    pacstrap = execute(f"pacstrap /mnt {' '.join(basic_pkg)}")
+    pacstrap = subprocess.run(shlex.split(f"pacstrap /mnt {' '.join(basic_pkg)}"), capture_output=True)
 
-    print(f"returncode is:\t{pacstrap.returncode}")
-    print(f"stdout is:\t{pacstrap.stdout}")
-    print(f"stderr is:\t{pacstrap.stderr}")
-    print(f"check_returncode is:\t{pacstrap.check_returncode()}")
+    if pacstrap.returncode != 0:
+        pacstrap()
 
 def pacman(pkg_list):
     pkgs = ' '.join(pkg_list)
