@@ -61,8 +61,7 @@ def copy_recursive(src, dst):
 
             if os.path.exists(dst_file):
                 os.remove(dst_file)
-            else:
-                shutil.copy2(src_file, dst_file)
+            shutil.copy2(src_file, dst_file)
 
 def execute(cmd):
     args = shlex.split(cmd)
