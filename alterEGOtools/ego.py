@@ -40,6 +40,30 @@ basic_pkg = ['base',
 beast_pkg = ['firefox',
              'wget']
 
+def copy_recursive(src, dst):
+    '''
+    The src is the source root directory.
+    The dest is the source root of the destination.
+    ref. http://techs.studyhorror.com/d/python-how-to-copy-or-move-folders-recursively
+    '''
+
+    print(f":: Copying files to {dst}...")
+
+    for src_dir, dirs, files in os.walk(src):
+        dst_dir = src_dir.replace(src, dst)
+        if not os.path.exists(dst_dir):
+            os.mkdir(dst_dir)
+
+        for f in files:
+            src_file = os.path.join(src_dir, f)
+            dst_file = os.path.join(dst_dir, f)
+            print(f" -> Copying {dst_file}")
+
+            if os.path.exists(dst_file):
+                os.remove(dst_file)
+            else:
+                shutil.copy2(src_file, dst_file)
+
 def execute(cmd):
     args = shlex.split(cmd)
     subprocess.run(args)
@@ -135,16 +159,21 @@ def sysconfig(mode):
     with open('/etc/hostname', 'w') as etc_hostname:
         etc_hostname.write(hostname)
     with open('/etc/hosts', 'w') as etc_hosts:
-        etc_hosts.write('''
+        etc_hosts.write(f'''
 127.0.0.1	localhost
 ::1		localhost
-127.0.1.1	pc1.localdomain	pc1
+127.0.1.1	{hostname}.localdomain	{hostname}
 ''')
 
     print(' -> Enabling NetworkManager daemon...')
     execute(f'systemctl enable NetworkManager.service')
 
     #-----[ POPULATING /etc/skel ]
+
+    if mode == beast:
+        src = f"{local_alterEGO}/config/"
+        dst = f"/etc/skel/"
+        copy_recursive(src, dst)
 
     #-----[ USERS and PASSWORDS ]
 
