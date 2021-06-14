@@ -170,7 +170,7 @@ def sysconfig(mode):
 
     #-----[ POPULATING /etc/skel ]
 
-    if mode == beast:
+    if mode == 'beast':
         src = f"{local_alterEGO}/config/"
         dst = f"/etc/skel/"
         copy_recursive(src, dst)
