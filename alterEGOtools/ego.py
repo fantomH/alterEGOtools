@@ -35,7 +35,7 @@ basic_pkg = ['base',
             'linux',
             'networkmanager',
             'python',
-            'vim']
+            'vtim']
 
 beast_pkg = ['firefox',
              'wget']
