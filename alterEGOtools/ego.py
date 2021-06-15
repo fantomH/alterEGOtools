@@ -68,7 +68,7 @@ def execute(cmd):
     subprocess.run(args)
 
 def pacstrap():
-    pacstrap = subprocess.run(shlex.split(f"pacstrap /mnt {' '.join(basic_pkg)}"), capture_output=True)
+    pacstrap = subprocess.run(shlex.split(f"pacstrap /mnt {' '.join(basic_pkg)}"))
 
     if pacstrap.returncode != 0:
         pacstrap()
