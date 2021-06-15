@@ -68,10 +68,9 @@ def execute(cmd):
     subprocess.run(args)
 
 def pacstrap():
-    pacstrap = subprocess.run(shlex.split(f"pacstrap /mnt {' '.join(basic_pkg)}"))
 
-    if pacstrap.returncode != 0:
-        pacstrap()
+    pacstrap = subprocess.run(shlex.split(f"pacstrap /mnt {' '.join(basic_pkg)}"))
+    return pacstrap.returncode
 
 def pacman(pkg_list):
     pkgs = ' '.join(pkg_list)
@@ -111,8 +110,14 @@ def installer(mode):
     os.mkdir('/mnt/home')
 
     #### Install minimal packages
+    #... Some pkgs might throw errors. Need to catch return code and retry if
+    #... it fails.
 
-    pacstrap()
+    returned_code = pacstrap()
+    rounds = 3
+    while returned_code != 0 and rounds != 0:
+        pacstrap()
+        rounds -= 1
 
     #### Generating the fstab.
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
