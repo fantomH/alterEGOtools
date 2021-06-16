@@ -67,21 +67,75 @@ def execute(cmd):
     args = shlex.split(cmd)
     subprocess.run(args)
 
-def pacstrap():
-
-    pacstrap = subprocess.run(shlex.split(f"pacstrap /mnt {' '.join(basic_pkg)}"))
-    return pacstrap.returncode
-
-def pacman(pkg_list):
-    pkgs = ' '.join(pkg_list)
-    execute(f"pacman -Syu --noconfirm --needed {pkgs}")
-
 def git(git_repository, local_directory):
 
     if not os.path.isdir(local_directory):
         execute(f"git clone {git_repository} {local_directory}")
     else:
         execute(f"git -C {local_directory} pull")
+
+def shared_resources():
+
+    #-----[ bookmarks.db ]
+    f = 'bookmarks.db'
+    print(f":: Deploying {f} to /usr/local/share...")
+    src = os.path.join(local_alterEGO, 'share', f)
+    dst = os.path.join('/usr/local/share', f)
+    os.symlink(src, dst)
+
+def shared_bin():
+
+    #### Deploys applications.
+
+    local_alterEGO_bin = f"{local_alterEGO}/bin"
+    files = os.listdir(local_alterEGO_bin)
+
+    for f in files:
+        print(f":: Deploying {f} to /usr/local/bin...")
+        src = os.path.join(local_alterEGO_bin, f)
+        dst = os.path.join('/usr/local/bin', f)
+        os.symlink(src, dst)
+
+def shared_wordlist():
+
+    #### Deploys wordlists.
+
+    if not os.path.exists('/usr/local/share/wordlist'):
+        os.mkdir('/usr/local/share/wordlist')
+
+    local_alterEGO_wordlist = f"{local_alterEGO}/share/wordlist"
+    files = os.listdir(local_alterEGO_wordlist)
+
+    for f in files:
+        print(f":: Deploying {f} to /usr/local/share/wordlist...")
+        src = os.path.join(local_alterEGO_wordlist, f)
+        dst = os.path.join('/usr/local/share/wordlist', f)
+        os.symlink(src, dst)
+
+def shared_reverse_shell():
+
+    #### Deploys reverse shells.
+
+    if not os.path.exists('/usr/local/share/reverse_shell'):
+        os.mkdir('/usr/local/share/reverse_shell')
+
+    local_alterEGO_reverse_shell = f"{local_alterEGO}/share/reverse_shell"
+    files = os.listdir(local_alterEGO_reverse_shell)
+
+    for f in files:
+        print(f":: Deploying {f} to /usr/local/share/reverse_shell...")
+        src = os.path.join(local_alterEGO_reverse_shell, f)
+        dst = os.path.join('/usr/local/share/reverse_shell', f)
+        os.symlink(src, dst)
+
+def pacman(pkg_list):
+    pkgs = ' '.join(pkg_list)
+    execute(f"pacman -Syu --noconfirm --needed {pkgs}")
+
+def pacstrap():
+
+    pacstrap = subprocess.run(shlex.split(f"pacstrap /mnt {' '.join(basic_pkg)}"))
+    return pacstrap.returncode
 
 def testrerun(string):
     print(string)
@@ -195,6 +249,9 @@ def sysconfig(mode):
         execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
 
     #-----[ SHARED RESOURCES ]
+
+    if mode == 'beast':
+        shared_resources()
 
     #-----[ SWAPFILE ]
 
