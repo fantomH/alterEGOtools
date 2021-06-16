@@ -252,6 +252,9 @@ def sysconfig(mode):
 
     if mode == 'beast':
         shared_resources()
+        shared_bin()
+        shared_wordlist()
+        shared_reverse_shell()
 
     #-----[ SWAPFILE ]
 
