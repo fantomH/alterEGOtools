@@ -37,8 +37,106 @@ basic_pkg = ['base',
             'python',
             'vim']
 
-beast_pkg = ['firefox',
-             'wget']
+beast_pkg = ['alsa-utils',
+             'arp-scan',
+             'bat',
+             'bc',
+             'bind',
+             'binwalk',
+             'bleachbit',
+             'cmatrix',
+             'code',
+             'cronie',
+             'dos2unix',
+             'entr',
+             'exfat-utils',
+             'feh',
+             'ffmpeg',
+             'firefox',
+             'freerdp',
+             'fzf',
+             'gimp',
+             'gnu-netcat',
+             'go',
+             'htop',
+             'i3-gaps',
+             'imagemagick',
+             'inkscape',
+             'john',
+             'jq',
+             'libreoffice-fresh',
+             'lynx',
+             'man-db',
+             'man-pages',
+             'mariadb-clients',
+             'metasploit',
+             'mlocate',
+             'mtools',
+             'mtr',
+             'net-tools',
+             'nfs-utils',
+             'nikto',
+             'nmap',
+             'notify-osd',
+             'ntfs-3g',
+             'openssh',
+             'openvpn',
+             'p7zip',
+             'perl-image-exiftool',
+             'polkit-gnome',
+             'php',
+             'postgresql',
+             'pptpclient',
+             'pulseaudio',
+             'pv',
+             'python-beautifulsoup4',
+             'python-pandas',
+             'python-pip',
+             'python-pyaml',
+             'python-rich',
+             'qrencode',
+             'qtile',
+             'ranger',
+             'remmina',
+             'rsync',
+             'screen',
+             'screenkey',
+             'sddm',
+             'shellcheck',
+             'sqlitebrowser',
+             'sxiv',
+             'tcpdump',
+             'tesseract',
+             'tesseract-data-eng',
+             'tesseract-data-fra',
+             'thunar',
+             'thunar-volman',
+             'tidy',
+             'tk',
+             'tmux',
+             'traceroute',
+             'transmission-gtk',
+             'tree',
+             'ufw',
+             'unrar',
+             'unzip',
+             'vim',
+             'virtualbox-guest-utils',
+             'w3m',
+             'wget',
+             'whois',
+             'wireshark-qt',
+             'xclip',
+             'xcompmgr',
+             'xdotool',
+             'xfce4-terminal',
+             'xorg-server',
+             'xorg-xinit',
+             'xterm',
+             'youtube-dl',
+             'zathura',
+             'zathura-pdf-mupdf',
+             'zbar']
 
 def copy_recursive(src, dst):
     '''
@@ -191,8 +289,8 @@ def installer(mode):
     elif mode == 'beast':
         execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
-    # execute(f'umount -R /mnt')
-    # execute(f'shutdown now') 
+    execute(f'umount -R /mnt')
+    execute(f'shutdown now') 
 
 def sysconfig(mode):
 
@@ -287,9 +385,9 @@ def sysconfig(mode):
 
     #-----[ VIRTUALBOX VM OPTIONS ]
 
-    # if mode == 'beast':
-        # execute(f'systemctl start vboxservice.service')
-        # execute(f'systemctl enable vboxservice.service')
+    if mode == 'beast':
+        execute(f'systemctl start vboxservice.service')
+        execute(f'systemctl enable vboxservice.service')
     
 def main():
 
@@ -309,7 +407,6 @@ def main():
         sysconfig(mode)
     if args.rerun:
         eval(args.rerun)
-        
 
 if __name__ == '__main__':
     main()
