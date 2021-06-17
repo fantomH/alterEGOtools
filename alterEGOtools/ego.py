@@ -276,9 +276,12 @@ def installer(mode):
 
     returned_code = pacstrap()
     rounds = 3
-    while returned_code != 0 and rounds != 0:
-        pacstrap()
-        rounds -= 1
+    while returned_code != 0:
+        if rounds > 0:
+            pacstrap()
+            rounds -= 1
+        else:
+            break
 
     #### Generating the fstab.
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
