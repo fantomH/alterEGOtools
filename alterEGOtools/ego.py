@@ -278,7 +278,7 @@ def installer(mode):
     rounds = 3
     while returned_code != 0:
         if rounds > 0:
-            pacstrap()
+            returned_code = pacstrap()
             rounds -= 1
         else:
             break
