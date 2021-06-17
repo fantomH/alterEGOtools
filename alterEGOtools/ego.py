@@ -137,6 +137,15 @@ def pacstrap():
     pacstrap = subprocess.run(shlex.split(f"pacstrap /mnt {' '.join(basic_pkg)}"))
     return pacstrap.returncode
 
+def swapfile():
+
+    execute(f"fallocate -l 1G /swapfile")
+    os.chmod('/swapfile', 0o600)
+    execute(f"mkswap /swapfile")
+    execute(f"swapon /swapfile")
+    with open('/etc/fstab', 'a') as swap_file:
+        swap_file.write("/swapfile none swap defaults 0 0")
+
 def testrerun(string):
     print(string)
 
@@ -258,6 +267,9 @@ def sysconfig(mode):
 
     #-----[ SWAPFILE ]
 
+    print(f":: Creating the swapfile...")
+    swapfile()
+
     #-----[ FIX PACMAN MIRRORLIST ]
 
     #-----[ PACKAGES INSTALL ]
@@ -275,9 +287,9 @@ def sysconfig(mode):
 
     #-----[ VIRTUALBOX VM OPTIONS ]
 
-    if mode == 'beast':
-        execute(f'systemctl start vboxservice.service')
-        execute(f'systemctl enable vboxservice.service')
+    # if mode == 'beast':
+        # execute(f'systemctl start vboxservice.service')
+        # execute(f'systemctl enable vboxservice.service')
     
 def main():
 
