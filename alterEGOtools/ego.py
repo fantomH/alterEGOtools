@@ -37,7 +37,11 @@ basic_pkg = ['base',
             'python',
             'vim']
 
-beast_pkg = ['alsa-utils',
+minimal_pkg = ['lynx',
+             'man-db',
+             'man-pages']
+
+full_pkg = ['alsa-utils',
              'arp-scan',
              'bat',
              'bc',
@@ -65,9 +69,6 @@ beast_pkg = ['alsa-utils',
              'john',
              'jq',
              'libreoffice-fresh',
-             'lynx',
-             'man-db',
-             'man-pages',
              'mariadb-clients',
              'metasploit',
              'mlocate',
@@ -137,6 +138,8 @@ beast_pkg = ['alsa-utils',
              'zathura',
              'zathura-pdf-mupdf',
              'zbar']
+
+beast_pkg = [*minimal_pkg, *full_pkg]
 
 def copy_recursive(src, dst):
     '''
@@ -375,6 +378,9 @@ def sysconfig(mode):
 
     #-----[ PACKAGES INSTALL ]
 
+    if mode == 'minimal':
+        pacman(minimal_pkg)
+
     if mode == 'beast':
         pacman(beast_pkg)
 
@@ -386,11 +392,16 @@ def sysconfig(mode):
     execute(f'grub-install /dev/sda')
     execute(f'grub-mkconfig -o /boot/grub/grub.cfg')
 
-    #-----[ VIRTUALBOX VM OPTIONS ]
+    #-----[ VIRTUALBOX SERVICES ]
 
     if mode == 'beast':
         execute(f'systemctl start vboxservice.service')
         execute(f'systemctl enable vboxservice.service')
+
+    #-----[ VIRTUALBOX SERVICES ]
+
+    if mode == 'beast':
+        execute(f'systemctl enable sddm.service')
     
 def main():
 
