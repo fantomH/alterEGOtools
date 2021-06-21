@@ -349,10 +349,10 @@ def sysconfig(mode):
 
     #-----[ POPULATING /etc/skel ]
 
-    if mode == 'beast':
-        src = f"{local_alterEGO}/config/"
-        dst = f"/etc/skel/"
-        copy_recursive(src, dst)
+    # if mode == 'beast':
+        # src = f"{local_alterEGO}/config/"
+        # dst = f"/etc/skel/"
+        # copy_recursive(src, dst)
 
     #-----[ USERS and PASSWORDS ]
 
@@ -396,11 +396,9 @@ def sysconfig(mode):
 
     if mode == 'beast':
         print(f":: Installing YAY...")
-        execute(f"cd /opt")
-        execute(f"git clone https://aur.archlinux.org/yay.git")
-        execute(f"chown -R {user}:users yay")
-        execute(f"cd yay")
-        execute(f"su {user} -c 'makepkg -si --needed --noconfirm'")
+        subprocess.run(shlex.split(f"git clone https://aur.archlinux.org/yay.git"), cwd='/opt')
+        execute(f"chown -R {user}:users /opt/yay")
+        subprocess.run(shlex.split(f"su {user} -c 'makepkg -si --needed --noconfirm'"), cwd='/opt/yay')
 
         print(f":: Installing AUR packages...")
         execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {aur_pkg}'")
