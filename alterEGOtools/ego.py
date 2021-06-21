@@ -303,8 +303,8 @@ def installer(mode):
     elif mode == 'beast':
         execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
-    execute(f'umount -R /mnt')
-    execute(f'shutdown now') 
+    # execute(f'umount -R /mnt')
+    # execute(f'shutdown now') 
 
 def sysconfig(mode):
 
