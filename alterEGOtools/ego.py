@@ -3,7 +3,7 @@
 #
 # ego.py
 #   created        : 2021-06-05 00:03:38 UTC
-#   updated        : 2021-06-11 08:51:18 UTC
+#   updated        : 2021-06-21 11:08:17 UTC
 #   description    : Deploy and update alterEGO Linux.
 #------------------------------------------------------------------------------
 
@@ -303,20 +303,20 @@ def installer(mode):
     elif mode == 'beast':
         execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
-    # execute(f'umount -R /mnt')
-    # execute(f'shutdown now') 
+    execute(f'umount -R /mnt')
+    execute(f'shutdown now') 
 
 def sysconfig(mode):
 
     #-----[ GIT REPOSITORIES ]
-    # print(f":: Fetching AlterEGO tools, config and other stuff...")
+    print(f":: Fetching AlterEGO tools, config and other stuff...")
 
-    # print(f" -> Pulling {git_tools}...")
-    # git(git_tools, local_tools)
+    print(f" -> Pulling {git_tools}...")
+    git(git_tools, local_tools)
 
-    # if mode == 'beast':
-        # print(f" -> Pulling {git_alterEGO}")
-        # git(git_alterEGO, local_alterEGO)
+    if mode == 'beast':
+        print(f" -> Pulling {git_alterEGO}")
+        git(git_alterEGO, local_alterEGO)
 
     #-----[ TIMEZONE & CLOCK ]
     os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
@@ -349,10 +349,10 @@ def sysconfig(mode):
 
     #-----[ POPULATING /etc/skel ]
 
-    # if mode == 'beast':
-        # src = f"{local_alterEGO}/config/"
-        # dst = f"/etc/skel/"
-        # copy_recursive(src, dst)
+    if mode == 'beast':
+        src = f"{local_alterEGO}/config/"
+        dst = f"/etc/skel/"
+        copy_recursive(src, dst)
 
     #-----[ USERS and PASSWORDS ]
 
@@ -371,11 +371,11 @@ def sysconfig(mode):
 
     #-----[ SHARED RESOURCES ]
 
-    # if mode == 'beast':
-        # shared_resources()
-        # shared_bin()
-        # shared_wordlist()
-        # shared_reverse_shell()
+    if mode == 'beast':
+        shared_resources()
+        shared_bin()
+        shared_wordlist()
+        shared_reverse_shell()
 
     #-----[ SWAPFILE ]
 
@@ -386,11 +386,11 @@ def sysconfig(mode):
 
     #-----[ PACKAGES INSTALL ]
 
-    # if mode == 'minimal':
-        # pacman(minimal_pkg)
+    if mode == 'minimal':
+        pacman(minimal_pkg)
 
-    # if mode == 'beast':
-        # pacman(beast_pkg)
+    if mode == 'beast':
+        pacman(beast_pkg)
 
     #-----[ YAY ]
 
@@ -412,14 +412,14 @@ def sysconfig(mode):
 
     #-----[ VIRTUALBOX SERVICES ]
 
-    # if mode == 'beast':
-        # execute(f'systemctl start vboxservice.service')
-        # execute(f'systemctl enable vboxservice.service')
+    if mode == 'beast':
+        execute(f'systemctl start vboxservice.service')
+        execute(f'systemctl enable vboxservice.service')
 
     #-----[ SDDM SERVICES ]
 
-    # if mode == 'beast':
-        # execute(f'systemctl enable sddm.service')
+    if mode == 'beast':
+        execute(f'systemctl enable sddm.service')
     
 def main():
 
