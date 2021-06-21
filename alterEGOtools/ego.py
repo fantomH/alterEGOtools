@@ -371,11 +371,11 @@ def sysconfig(mode):
 
     #-----[ SHARED RESOURCES ]
 
-    if mode == 'beast':
-        shared_resources()
-        shared_bin()
-        shared_wordlist()
-        shared_reverse_shell()
+    # if mode == 'beast':
+        # shared_resources()
+        # shared_bin()
+        # shared_wordlist()
+        # shared_reverse_shell()
 
     #-----[ SWAPFILE ]
 
