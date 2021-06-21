@@ -309,14 +309,14 @@ def installer(mode):
 def sysconfig(mode):
 
     #-----[ GIT REPOSITORIES ]
-    print(f":: Fetching AlterEGO tools, config and other stuff...")
+    # print(f":: Fetching AlterEGO tools, config and other stuff...")
 
-    print(f" -> Pulling {git_tools}...")
-    git(git_tools, local_tools)
+    # print(f" -> Pulling {git_tools}...")
+    # git(git_tools, local_tools)
 
-    if mode == 'beast':
-        print(f" -> Pulling {git_alterEGO}")
-        git(git_alterEGO, local_alterEGO)
+    # if mode == 'beast':
+        # print(f" -> Pulling {git_alterEGO}")
+        # git(git_alterEGO, local_alterEGO)
 
     #-----[ TIMEZONE & CLOCK ]
     os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
@@ -386,11 +386,11 @@ def sysconfig(mode):
 
     #-----[ PACKAGES INSTALL ]
 
-    if mode == 'minimal':
-        pacman(minimal_pkg)
+    # if mode == 'minimal':
+        # pacman(minimal_pkg)
 
-    if mode == 'beast':
-        pacman(beast_pkg)
+    # if mode == 'beast':
+        # pacman(beast_pkg)
 
     #-----[ YAY ]
 
@@ -413,14 +413,14 @@ def sysconfig(mode):
 
     #-----[ VIRTUALBOX SERVICES ]
 
-    if mode == 'beast':
-        execute(f'systemctl start vboxservice.service')
-        execute(f'systemctl enable vboxservice.service')
+    # if mode == 'beast':
+        # execute(f'systemctl start vboxservice.service')
+        # execute(f'systemctl enable vboxservice.service')
 
     #-----[ SDDM SERVICES ]
 
-    if mode == 'beast':
-        execute(f'systemctl enable sddm.service')
+    # if mode == 'beast':
+        # execute(f'systemctl enable sddm.service')
     
 def main():
 
