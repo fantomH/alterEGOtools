@@ -138,6 +138,17 @@ full_pkg = ['alsa-utils',
 
 beast_pkg = [*minimal_pkg, *full_pkg]
 
+aur_pkg = ['burpsuite',
+           'dirbuster',
+           'gobuster-git',
+           'gromit-mpx-git',
+           'inxi',
+           'librespeed-cli-bin',
+           'pandoc-bin',
+           'powershell-bin',
+           'simple-mtpfs',
+           'wfuzz-git']
+
 def copy_recursive(src, dst):
     '''
     The src is the source root directory.
@@ -382,6 +393,17 @@ def sysconfig(mode):
         pacman(beast_pkg)
 
     #-----[ YAY ]
+
+    if mode == 'beast':
+        print(f":: Installing YAY...")
+        execute(f"cd /opt")
+        execute(f"git clone https://aur.archlinux.org/yay.git")
+        execute(f"chown -R {user}:users yay")
+        execute(f"cd yay")
+        execute(f"su {user} -c 'makepkg -si --needed --noconfirm'")
+
+        print(f":: Installing AUR packages...")
+        execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {aur_pkg}'")
 
     #-----[ BOOTLOADER ]
 
