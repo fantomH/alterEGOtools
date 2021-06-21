@@ -401,7 +401,8 @@ def sysconfig(mode):
         subprocess.run(shlex.split(f"su {user} -c 'makepkg -si --needed --noconfirm'"), cwd='/opt/yay')
 
         print(f":: Installing AUR packages...")
-        execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {aur_pkg}'")
+        pkg_list = ' '.join(aur_pkg)
+        execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkg_list}'")
 
     #-----[ BOOTLOADER ]
 
