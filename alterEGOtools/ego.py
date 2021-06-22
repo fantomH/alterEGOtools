@@ -172,9 +172,9 @@ def copy_recursive(src, dst):
                 os.remove(dst_file)
             shutil.copy2(src_file, dst_file)
 
-def execute(cmd):
-    args = shlex.split(cmd)
-    subprocess.run(args)
+def execute(cmd, cwd=None):
+    cmd_list = shlex.split(cmd)
+    subprocess.run(cmd_list, cwd=cwd)
 
 def git(git_repository, local_directory):
 
@@ -396,13 +396,19 @@ def sysconfig(mode):
 
     if mode == 'beast':
         print(f":: Installing YAY...")
-        subprocess.run(shlex.split(f"git clone https://aur.archlinux.org/yay.git"), cwd='/opt')
+        # subprocess.run(shlex.split(f"git clone https://aur.archlinux.org/yay.git"), cwd='/opt')
+        execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
         execute(f"chown -R {user}:users /opt/yay")
         subprocess.run(shlex.split(f"su {user} -c 'makepkg -si --needed --noconfirm'"), cwd='/opt/yay')
 
         print(f":: Installing AUR packages...")
         pkg_list = ' '.join(aur_pkg)
         execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkg_list}'")
+
+        #### Burpsuite
+        #... Not running with java 16.
+        #... will need to install jre11-openjdk.
+        #... $ sudo archlinux-java set java-11-openjdk
 
     #-----[ BOOTLOADER ]
 
