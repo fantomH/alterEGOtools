@@ -16,11 +16,11 @@ import sys
 import threading
 
 #----------{ GLOBAL VARIABLES }
-git_tools = 'https://github.com/fantomH/alterEGOtools.git'
-git_alterEGO = 'https://github.com/fantomH/alterEGO.git'
+gitTOOLS = 'https://github.com/fantomH/alterEGOtools.git'
+gitEGO = 'https://github.com/fantomH/alterEGO.git'
 usr_local = '/usr/local'
-local_tools = f'{usr_local}/alterEGOtools'
-local_alterEGO = f'{usr_local}/alterEGO'
+localTOOLS = f'{usr_local}/alterEGOtools'
+localEGO = f'{usr_local}/alterEGO'
 
 timezone = 'America/New_York'
 hostname = 'pc1'
@@ -189,7 +189,7 @@ def shared_resources():
     #-----[ bookmarks.db ]
     f = 'bookmarks.db'
     print(f":: Deploying {f} to /usr/local/share...")
-    src = os.path.join(local_alterEGO, 'share', f)
+    src = os.path.join(localEGO, 'share', f)
     dst = os.path.join('/usr/local/share', f)
     os.symlink(src, dst)
 
@@ -197,12 +197,12 @@ def shared_bin():
 
     #### Deploys applications.
 
-    local_alterEGO_bin = f"{local_alterEGO}/bin"
-    files = os.listdir(local_alterEGO_bin)
+    localEGO_bin = f"{localEGO}/bin"
+    files = os.listdir(localEGO_bin)
 
     for f in files:
         print(f":: Deploying {f} to /usr/local/bin...")
-        src = os.path.join(local_alterEGO_bin, f)
+        src = os.path.join(localEGO_bin, f)
         dst = os.path.join('/usr/local/bin', f)
         os.symlink(src, dst)
 
@@ -213,12 +213,12 @@ def shared_wordlist():
     if not os.path.exists('/usr/local/share/wordlist'):
         os.mkdir('/usr/local/share/wordlist')
 
-    local_alterEGO_wordlist = f"{local_alterEGO}/share/wordlist"
-    files = os.listdir(local_alterEGO_wordlist)
+    localEGO_wordlist = f"{localEGO}/share/wordlist"
+    files = os.listdir(localEGO_wordlist)
 
     for f in files:
         print(f":: Deploying {f} to /usr/local/share/wordlist...")
-        src = os.path.join(local_alterEGO_wordlist, f)
+        src = os.path.join(localEGO_wordlist, f)
         dst = os.path.join('/usr/local/share/wordlist', f)
         os.symlink(src, dst)
 
@@ -229,12 +229,12 @@ def shared_reverse_shell():
     if not os.path.exists('/usr/local/share/reverse_shell'):
         os.mkdir('/usr/local/share/reverse_shell')
 
-    local_alterEGO_reverse_shell = f"{local_alterEGO}/share/reverse_shell"
-    files = os.listdir(local_alterEGO_reverse_shell)
+    localEGO_reverse_shell = f"{localEGO}/share/reverse_shell"
+    files = os.listdir(localEGO_reverse_shell)
 
     for f in files:
         print(f":: Deploying {f} to /usr/local/share/reverse_shell...")
-        src = os.path.join(local_alterEGO_reverse_shell, f)
+        src = os.path.join(localEGO_reverse_shell, f)
         dst = os.path.join('/usr/local/share/reverse_shell', f)
         os.symlink(src, dst)
 
@@ -312,12 +312,12 @@ def sysconfig(mode):
     #-----[ GIT REPOSITORIES ]
     print(f":: Fetching AlterEGO tools, config and other stuff...")
 
-    print(f" -> Pulling {git_tools}...")
-    git(git_tools, local_tools)
+    print(f" -> Pulling {gitTOOLS}...")
+    git(gitTOOLS, localTOOLS)
 
     if mode == 'beast':
-        print(f" -> Pulling {git_alterEGO}")
-        git(git_alterEGO, local_alterEGO)
+        print(f" -> Pulling {gitEGO}")
+        git(gitEGO, localEGO)
 
     #-----[ TIMEZONE & CLOCK ]
     os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
@@ -351,7 +351,7 @@ def sysconfig(mode):
     #-----[ POPULATING /etc/skel ]
 
     if mode == 'beast':
-        src = f"{local_alterEGO}/config/"
+        src = f"{localEGO}/config/"
         dst = f"/etc/skel/"
         copy_recursive(src, dst)
 
@@ -378,9 +378,9 @@ def sysconfig(mode):
         shared_wordlist()
         shared_reverse_shell()
         #### assets
-        copy_recursive(os.path.join(local_alterEGO, 'share', 'assets'), os.path.join(usr_local, 'share', 'assets'))
+        copy_recursive(os.path.join(localEGO, 'share', 'assets'), os.path.join(usr_local, 'share', 'assets'))
         #### backgrounds
-        copy_recursive(os.path.join(local_alterEGO, 'share', 'backgrounds'), os.path.join(usr_local, 'share', 'backgrounds'))
+        copy_recursive(os.path.join(localEGO, 'share', 'backgrounds'), os.path.join(usr_local, 'share', 'backgrounds'))
 
     #-----[ SWAPFILE ]
 
@@ -413,10 +413,10 @@ def sysconfig(mode):
     #-----[ SDDM ]
 
     if mode == 'beast':
-        shutil.copy(os.path.join(local_alterEGO, 'global', 'etc', 'sddm.conf'),
+        shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'),
                     '/etc/sddm.conf')
-        copy_recursive(os.path.join(local_alterEGO, 'global', 'usr', 'share', 'sddm', 'themes', 'alterEGO-simplyblack'),
-                       '/urs/share/sddm/themes/alterEGO-simplyblack')
+        copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm', 'themes', 'alterEGO-simplyblack'),
+                       '/usr/share/sddm/themes/alterEGO-simplyblack')
 
     #-----[ GENERATING mandb ]
 
