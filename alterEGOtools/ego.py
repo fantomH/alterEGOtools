@@ -73,6 +73,7 @@ full_pkg = ['alsa-utils',
             'inkscape',
             'john',
             'jq',
+            'jre11-openjdk',
             'libreoffice-fresh',
             'mariadb-clients',
             'metasploit',
@@ -303,8 +304,8 @@ def installer(mode):
     elif mode == 'beast':
         execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
-    execute(f'umount -R /mnt')
-    execute(f'shutdown now') 
+    # execute(f'umount -R /mnt')
+    # execute(f'shutdown now') 
 
 def sysconfig(mode):
 
@@ -376,6 +377,10 @@ def sysconfig(mode):
         shared_bin()
         shared_wordlist()
         shared_reverse_shell()
+        #### assets
+        copy_recursive(os.path.join(local_alterEGO, 'share', 'assets'), os.path.join(local_usr, 'share', 'assets'))
+        #### backgrounds
+        copy_recursive(os.path.join(local_alterEGO, 'share', 'backgrounds'), os.path.join(local_usr, 'share', 'backgrounds'))
 
     #-----[ SWAPFILE ]
 
@@ -405,10 +410,26 @@ def sysconfig(mode):
         pkg_list = ' '.join(aur_pkg)
         execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkg_list}'")
 
+    #-----[ SDDM ]
+
+    if mode == 'beast':
+        shutil.copy(os.path.join(local_alterEGO, 'global', 'etc', 'sddm.conf'),
+                    '/etc/sddm.conf')
+        copy_recursive(os.path.join(local_alterEGO, 'global', 'usr', 'share', 'sddm', 'themes', 'alterEGO-simplyblack'),
+                       '/urs/share/sddm/themes/alterEGO-simplyblack')
+
+    #-----[ GENERATING mandb ]
+
+    execute(f"mandb")
+
+    #-----[ SETTING JAVA DEFAULT ]
+
         #### Burpsuite
         #... Not running with java 16.
         #... will need to install jre11-openjdk.
         #... $ sudo archlinux-java set java-11-openjdk
+
+    execute(f"archlinux-java set java-11-openjdk")
 
     #-----[ BOOTLOADER ]
 
