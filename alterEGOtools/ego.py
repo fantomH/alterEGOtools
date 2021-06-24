@@ -378,9 +378,9 @@ def sysconfig(mode):
         shared_wordlist()
         shared_reverse_shell()
         #### assets
-        copy_recursive(os.path.join(local_alterEGO, 'share', 'assets'), os.path.join(local_usr, 'share', 'assets'))
+        copy_recursive(os.path.join(local_alterEGO, 'share', 'assets'), os.path.join(usr_local, 'share', 'assets'))
         #### backgrounds
-        copy_recursive(os.path.join(local_alterEGO, 'share', 'backgrounds'), os.path.join(local_usr, 'share', 'backgrounds'))
+        copy_recursive(os.path.join(local_alterEGO, 'share', 'backgrounds'), os.path.join(usr_local, 'share', 'backgrounds'))
 
     #-----[ SWAPFILE ]
 
