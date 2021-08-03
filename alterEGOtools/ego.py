@@ -314,28 +314,22 @@ def installer(mode):
 
     subprocess.run(['sfdisk', '/dev/sda'], text=True, input=partition)
 
-    sleep(10)
-
     #### Formating the File System.
 
     execute(f"mkfs.ext4 /dev/sda1")
-    sleep(10)
 
     #### Mounting /dev/sda1 to /mnt.
 
     execute(f"mount /dev/sda1 /mnt")
-    sleep(10)
 
     #### Creating ${HOME}. 
 
     os.mkdir('/mnt/home')
     print(f"  -> Created {os.listdir('/mnt')}")
-    sleep(10)
 
     # [ PACSTRAP ]_____________________________________________________________
 
     pacstrap()
-    sleep(10)
 
     #### Generating the fstab.
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
@@ -360,8 +354,6 @@ def sysconfig(mode):
     if mode == 'beast':
         print(f" -> Pulling {gitEGO}")
         git(gitEGO, localEGO)
-
-    sleep(10)
 
     #-----[ TIMEZONE & CLOCK ]
     os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
@@ -398,7 +390,6 @@ def sysconfig(mode):
         src = f"{localEGO}/config/"
         dst = f"/etc/skel/"
         copy_recursive(src, dst)
-        sleep(10)
 
     #-----[ USERS and PASSWORDS ]
 
@@ -437,7 +428,6 @@ def sysconfig(mode):
     # [ PACMAN ]_______________________________________________________________
 
     pacman(mode)
-    sleep(10)
 
     # [ YAY ]__________________________________________________________________
 
@@ -452,7 +442,6 @@ def sysconfig(mode):
         _yay = execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
         if _yay.returncode == 0:
             print('YAY!!')
-        sleep(10)
 
     # [ SDDM ]_________________________________________________________________
 
