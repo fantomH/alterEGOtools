@@ -446,10 +446,8 @@ def sysconfig(mode):
     # [ SDDM ]_________________________________________________________________
 
     if mode == 'beast':
-        shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'),
-                    '/etc/sddm.conf')
-        copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm', 'themes',
-                    'alterEGO-simplyblack'), '/usr/share/sddm/themes/alterEGO-simplyblack')
+        shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'), '/etc/sddm.conf')
+        copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm', 'themes', 'alterEGO-simplyblack'), '/usr/share/sddm/themes/alterEGO-simplyblack')
 
     #-----[ GENERATING mandb ]
 
