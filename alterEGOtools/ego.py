@@ -284,6 +284,7 @@ def pacstrap():
     #... it fails.
 
     returned_code = _pacstrap.returncode
+    print(returned_code)
     rounds = 3
     while _pacstrap.returncode != 0:
         if rounds > 0:
