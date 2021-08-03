@@ -182,7 +182,10 @@ def copy_recursive(src, dst):
 
 def execute(cmd, cwd=None):
     cmd_list = shlex.split(cmd)
-    subprocess.run(cmd_list, cwd=cwd)
+    cmd_run = subprocess.run(cmd_list, cwd=cwd)
+
+    CommandResults = namedtuple('CommandResults', ['returncode'])
+    return CommandResults(cmd_run.returncode)
 
 def git(git_repository, local_directory):
 
@@ -324,18 +327,7 @@ def installer(mode):
 
     # [ PACSTRAP ]_____________________________________________________________
 
-    #### Install minimal packages
-    #... Some pkgs might throw errors. Need to catch return code and retry if
-    #... it fails.
-
-    returned_code = pacstrap()
-    rounds = 3
-    while returned_code != 0:
-        if rounds > 0:
-            returned_code = pacstrap()
-            rounds -= 1
-        else:
-            break
+    pacstrap()
 
     #### Generating the fstab.
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
