@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-#--{ alterEGO Linux: "Open the vault of knowledge" }---------------------------
+# { alterEGO Linux: "Open the vault of knowledge" }
 #
 # ego.py
 #   created        : 2021-06-05 00:03:38 UTC
 #   updated        : 2021-07-27 10:58:04 UTC
 #   description    : Deploy and update alterEGO Linux.
-#------------------------------------------------------------------------------
+# _____________________________________________________________________________
 
 import argparse
 import os
@@ -15,7 +15,7 @@ import subprocess
 import sys
 import threading
 
-#----------{ GLOBAL VARIABLES }
+# { GLOBAL VARIABLES }_________________________________________________________
 gitTOOLS = 'https://github.com/fantomH/alterEGOtools.git'
 gitEGO = 'https://github.com/fantomH/alterEGO.git'
 usr_local = '/usr/local'
@@ -149,7 +149,7 @@ pkgs = {
         'zbar':                     'full',
         }
 
-# { UTIL FUNCTIONS }__________________________________________________________
+# { UTIL FUNCTIONS }___________________________________________________________
 
 def is_virtual_machine():
     # -- Use `$ systemd-detect-virt`
