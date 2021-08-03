@@ -283,7 +283,7 @@ def pacstrap():
     rounds = 3
     while pacstrap.returncode != 0:
         if rounds > 0:
-            returned_code = pacstrap
+            returned_code = pacstrap.returncode
             rounds -= 1
         else:
             break
