@@ -201,7 +201,7 @@ def msg(message, color=None):
         'green': '\033[92m'
             }
     reset = '\033[00m'
-    if color in not None:
+    if color is not None:
         msg_color = colors.get(color)
         print(f"\n{msg_color}{message}{reset}")
     sleep(5)
