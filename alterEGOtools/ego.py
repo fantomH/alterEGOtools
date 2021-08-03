@@ -271,14 +271,12 @@ def shared_reverse_shell():
 
 def pacman(mode):
     pkgs_list = ' '.join(packages('pacman', mode))
-    # execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
-    print(f"pacman -Syu --noconfirm --needed {pkgs_list}")
+    execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
 
 def pacstrap():
 
     pkgs_list = ' '.join(packages('pacstrap'))
     _pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
-    # print(f"pacstrap /mnt {pkgs_list}")
     
     #### Install minimal packages
     #... Some pkgs might throw errors. Need to catch return code and retry if
@@ -456,12 +454,13 @@ def sysconfig(mode):
             print('YAY!!')
         sleep(10)
 
-    #-----[ SDDM ]
+    # [ SDDM ]_________________________________________________________________
 
     if mode == 'beast':
         shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'),
                     '/etc/sddm.conf')
-        # copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm', 'themes', 'alterEGO-simplyblack'), '/usr/share/sddm/themes/alterEGO-simplyblack')
+        copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm', 'themes',
+                    'alterEGO-simplyblack'), '/usr/share/sddm/themes/alterEGO-simplyblack')
 
     #-----[ GENERATING mandb ]
 
