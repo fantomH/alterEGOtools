@@ -197,18 +197,18 @@ def testrerun(string):
 # { INSTALLER FUNCTIONS }______________________________________________________
 
 def packages(required_by, mode=None):
-    '''
-    Accepts list.
-    pkg_list = packages(['basic', 'full'])
-    '''
 
     if required_by == 'pacstrap':
-        return [k for k, v in pkgs.items() if v in ['basic']]
+        pkgs_list = [k for k, v in pkgs.items() if v in ['basic']]
     elif required_by == 'pacman':
         if mode == 'minimal':
-            return [k for k, v in pkgs.items() if v in ['minimal']]
+            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal']]
         elif mode == 'beast':
-            return [k for k, v in pkgs.items() if v in ['minimal', 'full']]
+            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'full']]
+    elif required_by == 'yay':
+            pkgs_list = [k for k, v in pkgs.items() if v in ['aur']]
+
+    return pkgs_list
 
 def shared_resources():
 
@@ -264,14 +264,29 @@ def shared_reverse_shell():
         dst = os.path.join('/usr/local/share/reverse_shell', f)
         os.symlink(src, dst)
 
-def pacman(pkg_list):
-    pkgs = ' '.join(pkg_list)
-    execute(f"pacman -Syu --noconfirm --needed {pkgs}")
+def pacman(mode):
+    pkgs_list = ' '.join(packages('pacman', mode))
+    # execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
+    print(f"pacman -Syu --noconfirm --needed {pkgs_list}")
 
 def pacstrap():
 
-    pacstrap = subprocess.run(shlex.split(f"pacstrap /mnt {' '.join(basic_pkg)}"))
-    return pacstrap.returncode
+    pkgs_list = ' '.join(packages('pacstrap'))
+    execute(f"pacstrap /mnt {pkgs_list}")
+    # print(f"pacstrap /mnt {pkgs_list}")
+    
+    #### Install minimal packages
+    #... Some pkgs might throw errors. Need to catch return code and retry if
+    #... it fails.
+
+    returned_code = pacstrap.returncode
+    rounds = 3
+    while pacstrap.returncode != 0:
+        if rounds > 0:
+            returned_code = pacstrap
+            rounds -= 1
+        else:
+            break
 
 def swapfile():
 
@@ -306,6 +321,8 @@ def installer(mode):
     #### Creating ${HOME}. 
 
     os.mkdir('/mnt/home')
+
+    # [ PACSTRAP ]_____________________________________________________________
 
     #### Install minimal packages
     #... Some pkgs might throw errors. Need to catch return code and retry if
@@ -416,11 +433,7 @@ def sysconfig(mode):
 
     #-----[ PACKAGES INSTALL ]
 
-    if mode == 'minimal':
-        pacman(minimal_pkg)
-
-    if mode == 'beast':
-        pacman(beast_pkg)
+    pacman(mode)
 
     #-----[ YAY ]
 
