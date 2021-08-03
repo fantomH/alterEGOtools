@@ -3,11 +3,12 @@
 #
 # ego.py
 #   created        : 2021-06-05 00:03:38 UTC
-#   updated        : 2021-07-27 10:58:04 UTC
+#   updated        : 2021-08-03 18:40:02 UTC
 #   description    : Deploy and update alterEGO Linux.
 # _____________________________________________________________________________
 
 import argparse
+from collections import namedtuple
 import os
 import shlex
 import shutil
