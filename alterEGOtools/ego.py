@@ -276,21 +276,25 @@ def pacman(mode):
 def pacstrap():
 
     pkgs_list = ' '.join(packages('pacstrap'))
-    _pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
+
+    try:
+        execute(f"pacstrap /mnt {pkgs_list}")
+    except:
+        execute(f"pacstrap /mnt {pkgs_list}")
     
     #### Install minimal packages
     #... Some pkgs might throw errors. Need to catch return code and retry if
     #... it fails.
 
-    returned_code = _pacstrap.returncode
-    print(returned_code)
-    rounds = 3
-    while returned_code != 0:
-        if rounds > 0:
-            returned_code = _pacstrap.returncode
-            rounds -= 1
-        else:
-            break
+    # returned_code = _pacstrap.returncode
+    # print(returned_code)
+    # rounds = 3
+    # while returned_code != 0:
+        # if rounds > 0:
+            # returned_code = _pacstrap.returncode
+            # rounds -= 1
+        # else:
+            # break
 
 def swapfile():
 
