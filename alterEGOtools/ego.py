@@ -285,7 +285,7 @@ def pacstrap():
     returned_code = _pacstrap.returncode
     print(returned_code)
     rounds = 3
-    while _pacstrap.returncode != 0:
+    while returned_code != 0:
         if rounds > 0:
             returned_code = _pacstrap.returncode
             rounds -= 1
