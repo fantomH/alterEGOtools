@@ -196,6 +196,16 @@ def git(git_repository, local_directory):
     else:
         execute(f"git -C {local_directory} pull")
 
+def msg(message, color=None):
+    colors = {
+        'green': '\033[92m'
+        'reset': '\033[00m'
+            }
+    if color in not None:
+        msg_color = colors.get[color]
+    print(f"{color}{message}{reset}")
+    sleep(5)
+
 def testrerun(string):
     print(string)
 
@@ -271,6 +281,7 @@ def shared_reverse_shell():
 
 def pacman(mode):
     pkgs_list = ' '.join(packages('pacman', mode))
+    msg(f'Packages list: \n{pkgs_list}', color='green')
     execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
 
 def pacstrap():
@@ -308,6 +319,7 @@ def swapfile():
 # { INSTALLER }________________________________________________________________
 
 def installer(mode):
+    msg(':: Creating the partition...', color='green')
     partition = '''label: dos
                    device: /dev/sda
                    unit: sectors
@@ -431,21 +443,25 @@ def sysconfig(mode):
 
     # [ PACMAN ]_______________________________________________________________
 
+    msg(f'just wait', color='green')
+    msg(f'MODE IS {mode}', color='green')
     pacman(mode)
+    msg(f'just wait', color='green')
+    
 
     # [ YAY ]__________________________________________________________________
 
     if mode == 'beast':
-        print(f":: Installing YAY...")
+        msg(":: Installing YAY...", color='green')
         execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
         execute(f"chown -R {user}:users /opt/yay")
         execute(f"su {user} -c 'makepkg -si --needed --noconfirm'", cwd='/opt/yay')
 
-        print(f":: Installing AUR packages...")
-        pkgs_list = packages('yay')
+        msg(f":: Installing AUR packages...", color='green')
+        pkgs_list = ' '.join(packages('yay'))
         _yay = execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
         if _yay.returncode == 0:
-            print('YAY!!')
+            msg('YAY!!', color='green')
 
     # [ SDDM ]_________________________________________________________________
 
