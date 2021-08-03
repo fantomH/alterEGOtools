@@ -3,7 +3,7 @@
 #
 # ego.py
 #   created        : 2021-06-05 00:03:38 UTC
-#   updated        : 2021-06-21 11:08:17 UTC
+#   updated        : 2021-07-27 10:58:04 UTC
 #   description    : Deploy and update alterEGO Linux.
 #------------------------------------------------------------------------------
 
@@ -28,129 +28,6 @@ root_passwd = 'toor'
 user = 'ghost'
 user_passwd = 'password1'
 
-basic_pkg = ['base',
-             'base-devel',
-             'git',
-             'grub',
-             'linux',
-             'networkmanager',
-             'python',
-             'vim']
-
-minimal_pkg = ['fzf',
-               'lynx',
-               'man-db',
-               'man-pages',
-               'openssh',
-               'openvpn',
-               'rsync',
-               'tmux',
-               'wget']
-
-full_pkg = ['alsa-utils',
-            'arp-scan',
-            'bat',
-            'bc',
-            'bind',
-            'binwalk',
-            'bleachbit',
-            'cmatrix',
-            'code',
-            'cronie',
-            'dos2unix',
-            'entr',
-            'exfat-utils',
-            'feh',
-            'ffmpeg',
-            'firefox',
-            'freerdp',
-            'gimp',
-            'gnu-netcat',
-            'go',
-            'htop',
-            'i3-gaps',
-            'imagemagick',
-            'inkscape',
-            'john',
-            'jq',
-            'jre11-openjdk',
-            'libreoffice-fresh',
-            'mariadb-clients',
-            'metasploit',
-            'mlocate',
-            'mtools',
-            'mtr',
-            'net-tools',
-            'nfs-utils',
-            'nikto',
-            'nmap',
-            'notify-osd',
-            'ntfs-3g',
-            'p7zip',
-            'pavucontrol'
-            'perl-image-exiftool',
-            'polkit-gnome',
-            'php',
-            'postgresql',
-            'pptpclient',
-            'pulseaudio',
-            'pv',
-            'python-beautifulsoup4',
-            'python-pandas',
-            'python-pip',
-            'python-pyaml',
-            'python-rich',
-            'qrencode',
-            'qtile',
-            'ranger',
-            'remmina',
-            'screen',
-            'screenkey',
-            'sddm',
-            'shellcheck',
-            'sqlitebrowser',
-            'sxiv',
-            'tcpdump',
-            'tesseract',
-            'tesseract-data-eng',
-            'tesseract-data-fra',
-            'thunar',
-            'thunar-volman',
-            'tidy',
-            'tk',
-            'traceroute',
-            'transmission-gtk',
-            'tree',
-            'unzip',
-            'virtualbox-guest-utils',
-            'w3m',
-            'whois',
-            'wireshark-qt',
-            'xclip',
-            'xcompmgr',
-            'xdotool',
-            'xfce4-terminal',
-            'xorg-server',
-            'xorg-xinit',
-            'xterm',
-            'youtube-dl',
-            'zathura',
-            'zathura-pdf-mupdf',
-            'zbar']
-
-beast_pkg = [*minimal_pkg, *full_pkg]
-
-aur_pkg = ['burpsuite',
-           'dirbuster',
-           'gobuster-git',
-           'gromit-mpx-git',
-           'inxi',
-           'librespeed-cli-bin',
-           'pandoc-bin',
-           'powershell-bin',
-           'simple-mtpfs',
-           'wfuzz-git']
-
 pkgs = {
         'alsa-utils':               'full',
         'arp-scan':                 'full',
@@ -161,6 +38,7 @@ pkgs = {
         'bind':                     'full',
         'binwalk':                  'full',
         'bleachbit':                'full',
+        'brave':                    'full',
         'burpsuite':                'aur',
         'cmatrix':                  'full',
         'code':                     'full',
@@ -271,13 +149,13 @@ pkgs = {
         'zbar':                     'full',
         }
 
-def packages(groups):
-    '''
-    Accepts list.
-    pkg_list = packages(['basic', 'full'])
-    '''
+# { UTIL FUNCTIONS }__________________________________________________________
 
-    return [k for k, v in pkgs.items() if v in groups]
+def is_virtual_machine():
+    # -- Use `$ systemd-detect-virt`
+    # .. If VirtualBox will return 'oracle'.
+    # .. If not in VM, will return 'none'.
+    pass
 
 def copy_recursive(src, dst):
     '''
@@ -312,6 +190,25 @@ def git(git_repository, local_directory):
         execute(f"git clone {git_repository} {local_directory}")
     else:
         execute(f"git -C {local_directory} pull")
+
+def testrerun(string):
+    print(string)
+
+# { INSTALLER FUNCTIONS }______________________________________________________
+
+def packages(required_by, mode=None):
+    '''
+    Accepts list.
+    pkg_list = packages(['basic', 'full'])
+    '''
+
+    if required_by == 'pacstrap':
+        return [k for k, v in pkgs.items() if v in ['basic']]
+    elif required_by == 'pacman':
+        if mode == 'minimal':
+            return [k for k, v in pkgs.items() if v in ['minimal']]
+        elif mode == 'beast':
+            return [k for k, v in pkgs.items() if v in ['minimal', 'full']]
 
 def shared_resources():
 
@@ -385,8 +282,7 @@ def swapfile():
     with open('/etc/fstab', 'a') as swap_file:
         swap_file.write("/swapfile none swap defaults 0 0")
 
-def testrerun(string):
-    print(string)
+# { INSTALLER }________________________________________________________________
 
 def installer(mode):
     partition = '''label: dos
@@ -599,4 +495,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-#--{ file:FIN }----------------------------------------------------------------
+# { FIN }______________________________________________________________________
