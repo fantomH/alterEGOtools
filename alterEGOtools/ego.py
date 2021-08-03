@@ -40,7 +40,7 @@ pkgs = {
         'bind':                     'full',
         'binwalk':                  'full',
         'bleachbit':                'full',
-        'brave':                    'full',
+        'brave-bin':                'aur',
         'burpsuite':                'aur',
         'cmatrix':                  'full',
         'code':                     'full',
@@ -199,11 +199,11 @@ def git(git_repository, local_directory):
 def msg(message, color=None):
     colors = {
         'green': '\033[92m'
-        'reset': '\033[00m'
             }
+    reset = '\033[00m'
     if color in not None:
-        msg_color = colors.get[color]
-    print(f"{color}{message}{reset}")
+        msg_color = colors.get(color)
+        print(f"\n{msg_color}{message}{reset}")
     sleep(5)
 
 def testrerun(string):
