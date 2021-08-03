@@ -424,22 +424,21 @@ def sysconfig(mode):
 
     #-----[ FIX PACMAN MIRRORLIST ]
 
-    #-----[ PACKAGES INSTALL ]
+    # [ PACMAN ]_______________________________________________________________
 
     pacman(mode)
 
-    #-----[ YAY ]
+    # [ YAY ]__________________________________________________________________
 
     if mode == 'beast':
         print(f":: Installing YAY...")
-        # subprocess.run(shlex.split(f"git clone https://aur.archlinux.org/yay.git"), cwd='/opt')
         execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
         execute(f"chown -R {user}:users /opt/yay")
-        subprocess.run(shlex.split(f"su {user} -c 'makepkg -si --needed --noconfirm'"), cwd='/opt/yay')
+        execute(f"su {user} -c 'makepkg -si --needed --noconfirm'", cwd='/opt/yay')
 
         print(f":: Installing AUR packages...")
-        pkg_list = ' '.join(aur_pkg)
-        execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkg_list}'")
+        pkgs_list = packages('yay')
+        execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
 
     #-----[ SDDM ]
 
