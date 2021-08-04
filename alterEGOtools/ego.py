@@ -467,7 +467,7 @@ def sysconfig(mode):
 
     if mode == 'beast':
         shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'), '/etc/sddm.conf')
-        copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm'), '/usr/share/')
+        copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm'), '/usr/share')
 
     #-----[ GENERATING mandb ]
 
