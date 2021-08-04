@@ -166,7 +166,10 @@ def copy_recursive(src, dst):
     ref. http://techs.studyhorror.com/d/python-how-to-copy-or-move-folders-recursively
     '''
 
-    print(f":: Copying files to {dst}...")
+    if not os.path.exists(dst):
+        os.makedirs(dst)
+
+    msg(f":: Copying files to {dst}...", color='green')
 
     for src_dir, dirs, files in os.walk(src):
         dst_dir = src_dir.replace(src, dst)
@@ -467,7 +470,7 @@ def sysconfig(mode):
 
     if mode == 'beast':
         shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'), '/etc/sddm.conf')
-        copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm'), '/usr/share')
+        copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm'), '/usr/share/sddm')
 
     #-----[ GENERATING mandb ]
 
