@@ -3,7 +3,7 @@
 #
 # ego.py
 #   created        : 2021-06-05 00:03:38 UTC
-#   updated        : 2021-08-03 18:40:02 UTC
+#   updated        : 2021-08-12 17:17:08 UTC
 #   description    : Deploy and update alterEGO Linux.
 # _____________________________________________________________________________
 
@@ -15,7 +15,7 @@ import shutil
 import subprocess
 import sys
 import threading
-from time import sleep
+import time
 
 # { GLOBAL VARIABLES }_________________________________________________________
 gitTOOLS = 'https://github.com/fantomH/alterEGOtools.git'
@@ -113,7 +113,7 @@ pkgs = {
         'rsync':                    'minimal',
         'screen':                   'full',
         'screenkey':                'full',
-        'sddm':                     'full',
+        #'sddm':                     'full',
         'shellcheck':               'full',
         'simple-mtpfs':             'aur',
         'sqlitebrowser':            'full',
@@ -175,12 +175,12 @@ def copy_recursive(src, dst):
         dst_dir = src_dir.replace(src, dst)
         if not os.path.exists(dst_dir):
             os.mkdir(dst_dir)
-            Msg.console(f" -> {_blue}Creating directory {dst_dir}...", wait=1)
+            Msg.console(f" -> {_blue}Creating directory {dst_dir}.", wait=1)
 
         for f in files:
             src_file = os.path.join(src_dir, f)
             dst_file = os.path.join(dst_dir, f)
-            Msg.console(f" -> {_blue}Copying {dst_file}...", wait=1)
+            Msg.console(f" -> {_blue}Copying {dst_file}.", wait=1)
 
             if os.path.exists(dst_file):
                 os.remove(dst_file)
@@ -310,6 +310,7 @@ def shared_wordlist():
     localEGO_wordlist = f"{localEGO}/share/wordlist"
     files = os.listdir(localEGO_wordlist)
 
+    for f in files:
         Msg.console(f" -> {_blue}{f}", wait=1)
         src = os.path.join(localEGO_wordlist, f)
         dst = os.path.join('/usr/local/share/wordlist', f)
@@ -420,7 +421,7 @@ def installer(mode):
     # [ ALL DONE ]
     all_done = input(f":: {_green}Shutdown [Y/n]? ")
     if all_done.lower() in ['y', 'yes']:
-        Msg.console{f" -> {_blue}Good Bye!", wait=10}
+        Msg.console(f" -> {_blue}Good Bye!", wait=10)
         try:
             execute(f'umount -R /mnt')
             execute(f'shutdown now') 
@@ -438,7 +439,6 @@ def sysconfig(mode):
     git(gitTOOLS, localTOOLS)
 
     if mode == 'beast':
-        print(f" -> Pulling {gitEGO}")
         Msg.console(f" -> {_blue}Pulling {gitEGO}.", wait=5)
         git(gitEGO, localEGO)
 
@@ -533,11 +533,13 @@ def sysconfig(mode):
 
     # [ SDDM ]
 
+    '''
     if mode == 'beast':
         Msg.console(f":: {_green}Deploying sddm and starting the service...", wait=5)
         shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'), '/etc/sddm.conf')
         copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm'), '/usr/share/sddm')
         execute(f'systemctl enable sddm.service')
+    '''
 
     # [ GENERATING mandb ]
 
