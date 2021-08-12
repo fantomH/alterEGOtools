@@ -345,11 +345,9 @@ def pacstrap():
     pkgs_list = ' '.join(packages('pacstrap'))
     Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=1)
 
-    try:
-        execute(f"pacman -Syy")
-        execute(f"pacstrap /mnt {pkgs_list}")
-    except:
-        execute(f"pacstrap /mnt {pkgs_list}")
+    execute(f"rm -rf /var/lib/pacman/sync")
+    execute(f"pacman -Syy")
+    execute(f"pacstrap /mnt {pkgs_list}")
     
     #### Install minimal packages
     #... Some pkgs might throw errors. Need to catch return code and retry if
