@@ -346,6 +346,8 @@ def pacstrap():
     Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=1)
 
     execute(f"rm -rf /var/lib/pacman/sync")
+    execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
+    execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
     execute(f"pacman -Syy")
     execute(f"pacstrap /mnt {pkgs_list}")
     
