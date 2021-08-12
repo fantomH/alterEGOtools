@@ -336,6 +336,7 @@ def pacman(mode):
     Msg.console(f":: {_green}Starting pacman...", wait=5)
     pkgs_list = ' '.join(packages('pacman', mode))
     Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=1)
+    execute(f"pacman -Syy")
     execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
 
 def pacstrap():
@@ -345,6 +346,7 @@ def pacstrap():
     Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=1)
 
     try:
+        execute(f"pacman -Syy")
         execute(f"pacstrap /mnt {pkgs_list}")
     except:
         execute(f"pacstrap /mnt {pkgs_list}")
