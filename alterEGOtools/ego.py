@@ -169,18 +169,18 @@ def copy_recursive(src, dst):
     if not os.path.exists(dst):
         os.makedirs(dst)
 
-    Msg.console(f":: {_green}Copying files to {dst}...", wait=5)
+    Msg.console(f":: {_green}Copying files to {dst}...", wait=0)
 
     for src_dir, dirs, files in os.walk(src):
         dst_dir = src_dir.replace(src, dst)
         if not os.path.exists(dst_dir):
             os.mkdir(dst_dir)
-            Msg.console(f" -> {_blue}Creating directory {dst_dir}.", wait=1)
+            Msg.console(f" -> {_blue}Creating directory {dst_dir}.", wait=0)
 
         for f in files:
             src_file = os.path.join(src_dir, f)
             dst_file = os.path.join(dst_dir, f)
-            Msg.console(f" -> {_blue}Copying {dst_file}.", wait=1)
+            Msg.console(f" -> {_blue}Copying {dst_file}.", wait=0)
 
             if os.path.exists(dst_file):
                 os.remove(dst_file)
@@ -257,7 +257,7 @@ class Msg:
         print(message + Msg.color('reset'))
         time.sleep(wait)
 
-_blue = Msg.color('blue')
+_blue = Msg.color('lightblue')
 _green = Msg.color('lightgreen')
 
 # { INSTALLER FUNCTIONS }______________________________________________________
@@ -282,7 +282,7 @@ def shared_resources():
 
     # [ bookmarks.db ]_________________________________________________________
     f = 'bookmarks.db'
-    Msg.console(f":: {_green}Deploying {f} to /usr/local/share...", wait=5)
+    Msg.console(f":: {_green}Deploying {f} to /usr/local/share...", wait=0)
     src = os.path.join(localEGO, 'share', f)
     dst = os.path.join('/usr/local/share', f)
     os.symlink(src, dst)
@@ -290,12 +290,12 @@ def shared_resources():
 def shared_bin():
     # -- Deploys applications.
 
-    Msg.console(f":: {_green}Deploying application to /usr/local/bin...", wait=5)
+    Msg.console(f":: {_green}Deploying application to /usr/local/bin...", wait=0)
     localEGO_bin = f"{localEGO}/bin"
     files = os.listdir(localEGO_bin)
 
     for f in files:
-        Msg.console(f" -> {_blue}{f}", wait=1)
+        Msg.console(f" -> {_blue}{f}", wait=0)
         src = os.path.join(localEGO_bin, f)
         dst = os.path.join('/usr/local/bin', f)
         os.symlink(src, dst)
@@ -303,7 +303,7 @@ def shared_bin():
 def shared_wordlist():
     # -- Deploys wordlists.
 
-    Msg.console(f":: {_green}Deploying application to /usr/local/share/wordlist...", wait=5)
+    Msg.console(f":: {_green}Deploying application to /usr/local/share/wordlist...", wait=0)
     if not os.path.exists('/usr/local/share/wordlist'):
         os.mkdir('/usr/local/share/wordlist')
 
@@ -311,7 +311,7 @@ def shared_wordlist():
     files = os.listdir(localEGO_wordlist)
 
     for f in files:
-        Msg.console(f" -> {_blue}{f}", wait=1)
+        Msg.console(f" -> {_blue}{f}", wait=0)
         src = os.path.join(localEGO_wordlist, f)
         dst = os.path.join('/usr/local/share/wordlist', f)
         os.symlink(src, dst)
@@ -319,7 +319,7 @@ def shared_wordlist():
 def shared_reverse_shell():
     # -- Deploys reverse shells.
 
-    Msg.console(f":: {_green}Deploying application to /usr/local/share/reverse_shell...", wait=5)
+    Msg.console(f":: {_green}Deploying application to /usr/local/share/reverse_shell...", wait=0)
     if not os.path.exists('/usr/local/share/reverse_shell'):
         os.mkdir('/usr/local/share/reverse_shell')
 
@@ -333,17 +333,17 @@ def shared_reverse_shell():
         os.symlink(src, dst)
 
 def pacman(mode):
-    Msg.console(f":: {_green}Starting pacman...", wait=5)
+    Msg.console(f":: {_green}Starting pacman...", wait=0)
     pkgs_list = ' '.join(packages('pacman', mode))
-    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=1)
+    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
     execute(f"pacman -Syy")
     execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
 
 def pacstrap():
 
-    Msg.console(f":: {_green}Starting pacstrap...", wait=5)
+    Msg.console(f":: {_green}Starting pacstrap...", wait=0)
     pkgs_list = ' '.join(packages('pacstrap'))
-    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=1)
+    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
 
     execute(f"rm -rf /var/lib/pacman/sync")
     execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
@@ -367,7 +367,7 @@ def pacstrap():
 
 def swapfile():
 
-    Msg.console(f"{_green}Creating a 1G swapfile...", wait=5)
+    Msg.console(f"{_green}Creating a 1G swapfile...", wait=0)
     execute(f"fallocate -l 1G /swapfile")
     os.chmod('/swapfile', 0o600)
     execute(f"mkswap /swapfile")
@@ -379,7 +379,7 @@ def swapfile():
 
 def installer(mode):
     # [ PARTITION ]
-    Msg.console(f":: {_green}Creating and mounting the partition...", wait=5)
+    Msg.console(f":: {_green}Creating and mounting the partition...", wait=0)
     partition = '''label: dos
                    device: /dev/sda
                    unit: sectors
@@ -402,25 +402,24 @@ def installer(mode):
 
     os.mkdir('/mnt/home')
 
-    Msg.console(f" -> {_blue}Created {os.listdir('/mnt')}", wait=1)
+    Msg.console(f" -> {_blue}Created {os.listdir('/mnt')}", wait=0)
 
     # [ PACSTRAP ]
 
     pacstrap()
+    
     while True:
-        reinstall = input(f":: {_green}Re-run pacstrap [Y/n]? ")
-        if reinstall.lower() in ['y', 'yes']:
+        if input(f":: {_green}Re-run pacstrap [Y/n]? ").lower() in ['y', 'yes']:
             pacstrap()
         else:
             break
-        break
 
     # [ FSTAB ]
-    Msg.console(f":: {_green}Generating the fstab...", wait=1)
+    Msg.console(f":: {_green}Generating the fstab...", wait=0)
     subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
 
     # [ ARCH-ROOT ]
-    Msg.console(f":: {_green}Preparing arch-root...", wait=10)
+    Msg.console(f":: {_green}Preparing arch-root...", wait=2)
     shutil.copy('/root/ego.py', '/mnt/root/ego.py')
     if mode == 'minimal':
         execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
@@ -437,29 +436,29 @@ def installer(mode):
         except:
             execute(f'shutdown now') 
     else:
-        Msg.console(f" -> {_blue}Do a manual shutdown when ready.", wait=10)
+        Msg.console(f" -> {_blue}Do a manual shutdown when ready.", wait=1)
 
 def sysconfig(mode):
 
     # [ GIT REPOSITORIES ]
-    Msg.console(f":: {_green}Fetching AlterEGO tools, config and other stuff...", wait=5)
+    Msg.console(f":: {_green}Fetching AlterEGO tools, config and other stuff...", wait=0)
 
-    Msg.console(f" -> {_blue}Pulling {gitTOOLS}.", wait=5)
+    Msg.console(f" -> {_blue}Pulling {gitTOOLS}.", wait=0)
     git(gitTOOLS, localTOOLS)
 
     if mode == 'beast':
-        Msg.console(f" -> {_blue}Pulling {gitEGO}.", wait=5)
+        Msg.console(f" -> {_blue}Pulling {gitEGO}.", wait=0)
         git(gitEGO, localEGO)
 
     # [ TIMEZONE & CLOCK ]
-    Msg.console(f":: {_green}Setting clock and timezone...", wait=5)
+    Msg.console(f":: {_green}Setting clock and timezone...", wait=0)
     os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
     execute(f'timedatectl set-ntp true')
     execute(f'hwclock --systohc --utc')
 
     # [ LOCALE ]
 
-    Msg.console(f":: {_green}Generating locale...", wait=5)
+    Msg.console(f":: {_green}Generating locale...", wait=0)
     execute(f'sed -i "s/#en_US.UTF-8/en_US.UTF-8/" /etc/locale.gen')
     with open('/etc/locale.conf', 'w') as locale_conf:
         locale_conf.write('LANG=en_US.UTF-8')
@@ -468,7 +467,7 @@ def sysconfig(mode):
 
     # [ NETWORK CONFIGURATION ]
 
-    Msg.console(f":: {_green}Setting up network...", wait=5)
+    Msg.console(f":: {_green}Setting up network...", wait=0)
     with open('/etc/hostname', 'w') as etc_hostname:
         etc_hostname.write(hostname)
     with open('/etc/hosts', 'w') as etc_hosts:
@@ -478,36 +477,36 @@ def sysconfig(mode):
 127.0.1.1	{hostname}.localdomain	{hostname}
 ''')
 
-    Msg.console(f" -> {_blue}Enabling NetworkManager daemon...", wait=2)
+    Msg.console(f" -> {_blue}Enabling NetworkManager daemon...", wait=0)
     execute(f'systemctl enable NetworkManager.service')
 
     # [ POPULATING /etc/skel ]
 
     if mode == 'beast':
-        Msg.console(f":: {_green}Populating /etc/skel...", wait=5)
+        Msg.console(f":: {_green}Populating /etc/skel...", wait=0)
         src = f"{localEGO}/config/"
         dst = f"/etc/skel/"
         copy_recursive(src, dst)
 
     # [ USERS and PASSWORDS ]
 
-    Msg.console(f":: {_green}Configuring users and passwords...", wait=5)
-    Msg.console(f" -> {_blue}Setting password for root user.", wait=2)
+    Msg.console(f":: {_green}Configuring users and passwords...", wait=0)
+    Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
     subprocess.run(['passwd'], input=f'{root_passwd}\n{root_passwd}\n', text=True)
 
     if mode == 'beast':
-        Msg.console(f" -> {_blue}Creating user {user}", wait=2)
+        Msg.console(f" -> {_blue}Creating user {user}", wait=0)
         execute(f'useradd -m -g users -G wheel {user}') 
-        Msg.console(f" -> {_blue}Setting password for {user}", wait=2)
+        Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
         subprocess.run(['passwd', user], input=f'{user_passwd}\n{user_passwd}\n', text=True)
 
-        Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=2)
+        Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
         execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
 
     # [ SHARED RESOURCES ]
 
     if mode == 'beast':
-        Msg.console(f":: {_green}Deploying shared resources...", wait=5)
+        Msg.console(f":: {_green}Deploying shared resources...", wait=0)
         shared_resources()
         shared_bin()
         shared_wordlist()
@@ -526,18 +525,23 @@ def sysconfig(mode):
     # [ PACMAN ]
 
     pacman(mode)
+    while True:
+        if input(f":: {_green}Re-run pacman [Y/n]? ").lower() in ['y', 'yes']:
+            pacman(mode)
+        else:
+            break
 
     # [ YAY ]
 
     if mode == 'beast':
-        Msg.console(f":: {_green}Installing YAY...", wait=5)
+        Msg.console(f":: {_green}Installing YAY...", wait=0)
         execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
         execute(f"chown -R {user}:users /opt/yay")
         execute(f"su {user} -c 'makepkg -si --needed --noconfirm'", cwd='/opt/yay')
 
-        Msg.console(f":: {_green}Installing AUR packages...", wait=5)
+        Msg.console(f":: {_green}Installing AUR packages...", wait=0)
         pkgs_list = ' '.join(packages('yay'))
-        Msg.console(f" -> {_blue}Will be installed:\n{pkgs_list}", wait=4)
+        Msg.console(f" -> {_blue}Will be installed:\n{pkgs_list}", wait=0)
         execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
 
     # [ SDDM ]
@@ -552,7 +556,7 @@ def sysconfig(mode):
 
     # [ GENERATING mandb ]
 
-    Msg.console(f":: {_green}Generating mandb...", wait=5)
+    Msg.console(f":: {_green}Generating mandb...", wait=0)
     execute(f"mandb")
 
     # [ SETTING JAVA DEFAULT ]
@@ -563,19 +567,19 @@ def sysconfig(mode):
     # .. $ sudo archlinux-java set java-11-openjdk
 
     if mode == 'beast':
-        Msg.console(f":: {_green}Fixing Java...", wait=2)
+        Msg.console(f":: {_green}Fixing Java...", wait=0)
         execute(f"archlinux-java set java-11-openjdk")
 
     # [ BOOTLOADER ]
 
-    Msg.console(f":: {_green}Installing and configuring the bootloader...", wait=5)
+    Msg.console(f":: {_green}Installing and configuring the bootloader...", wait=0)
     execute(f'grub-install /dev/sda')
     execute(f'grub-mkconfig -o /boot/grub/grub.cfg')
 
     # [ VIRTUALBOX SERVICES ]
 
     if mode == 'beast':
-        Msg.console(f":: {_green}Starting vbox service...", wait=5)
+        Msg.console(f":: {_green}Starting vbox service...", wait=0)
         execute(f'systemctl start vboxservice.service')
         execute(f'systemctl enable vboxservice.service')
     
@@ -590,7 +594,7 @@ def main():
 
     if args.install:
         mode = args.install
-        Msg.console(f":: {_green}This will install AlterEGO Linux in {mode} mode...", wait=10)
+        Msg.console(f":: {_green}This will install AlterEGO Linux in {mode} mode...", wait=3)
         installer(mode)
     if args.sysconfig:
         mode = args.sysconfig
