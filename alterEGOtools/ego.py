@@ -259,6 +259,7 @@ class Msg:
 
 _blue = Msg.color('lightblue')
 _green = Msg.color('lightgreen')
+_RESET = Msg.color('reset')
 
 # { INSTALLER FUNCTIONS }______________________________________________________
 
@@ -409,7 +410,7 @@ def installer(mode):
     pacstrap()
     
     while True:
-        if input(f":: {_green}Re-run pacstrap [Y/n]? ").lower() in ['y', 'yes']:
+        if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
             pacstrap()
         else:
             break
@@ -526,7 +527,7 @@ def sysconfig(mode):
 
     pacman(mode)
     while True:
-        if input(f":: {_green}Re-run pacman [Y/n]? ").lower() in ['y', 'yes']:
+        if input(f":: {_green}Re-run pacman [Y/n]? {_RESET}").lower() in ['y', 'yes']:
             pacman(mode)
         else:
             break
