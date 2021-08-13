@@ -407,6 +407,13 @@ def installer(mode):
     # [ PACSTRAP ]
 
     pacstrap()
+    while True:
+        reinstall = input(f":: {_green}Re-run pacstrap [Y/n]? ")
+        if all_done.lower() in ['y', 'yes']:
+            pacstrap()
+        else:
+            break
+        break
 
     # [ FSTAB ]
     Msg.console(f":: {_green}Generating the fstab...", wait=1)
