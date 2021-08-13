@@ -409,7 +409,7 @@ def installer(mode):
     pacstrap()
     while True:
         reinstall = input(f":: {_green}Re-run pacstrap [Y/n]? ")
-        if all_done.lower() in ['y', 'yes']:
+        if reinstall.lower() in ['y', 'yes']:
             pacstrap()
         else:
             break
