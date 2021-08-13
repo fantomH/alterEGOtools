@@ -337,6 +337,7 @@ def pacman(mode):
     Msg.console(f":: {_green}Starting pacman...", wait=0)
     pkgs_list = ' '.join(packages('pacman', mode))
     Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
+    execute(f"pacman -S archlinux-keyring")
     execute(f"pacman -Syy")
     execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
 
