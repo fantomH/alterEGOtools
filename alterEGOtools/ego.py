@@ -151,7 +151,7 @@ pkgs = {
         'zbar':                     'full',
         }
 
-# { UTIL FUNCTIONS }___________________________________________________________
+## { UTIL FUNCTIONS }__________________________________________________________
 
 def is_virtual_machine():
     # -- Use `$ systemd-detect-virt`
@@ -187,7 +187,7 @@ def copy_recursive(src, dst):
             shutil.copy2(src_file, dst_file)
 
 def execute(cmd, cwd=None):
-    # .. TODO: Send to logs.
+    #### TODO: Send to logs.
 
     cmd_list = shlex.split(cmd)
     cmd_run = subprocess.run(cmd_list, cwd=cwd)
@@ -261,7 +261,7 @@ _blue = Msg.color('lightblue')
 _green = Msg.color('lightgreen')
 _RESET = Msg.color('reset')
 
-# { INSTALLER FUNCTIONS }______________________________________________________
+## { INSTALLER FUNCTIONS }_____________________________________________________
 
 def packages(required_by, mode=None):
 
@@ -342,31 +342,6 @@ def pacman(mode):
     execute(f"pacman -Syy")
     execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
 
-def pacstrap():
-
-    Msg.console(f":: {_green}Starting pacstrap...", wait=0)
-    pkgs_list = ' '.join(packages('pacstrap'))
-    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
-
-    execute(f"rm -rf /var/lib/pacman/sync")
-    execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
-    execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
-    execute(f"pacman -Syy")
-    execute(f"pacstrap /mnt {pkgs_list}")
-    
-    #### Install minimal packages
-    #... Some pkgs might throw errors. Need to catch return code and retry if
-    #... it fails.
-
-    # returned_code = _pacstrap.returncode
-    # print(returned_code)
-    # rounds = 3
-    # while returned_code != 0:
-        # if rounds > 0:
-            # returned_code = _pacstrap.returncode
-            # rounds -= 1
-        # else:
-            # break
 
 def swapfile():
 
@@ -378,10 +353,10 @@ def swapfile():
     with open('/etc/fstab', 'a') as swap_file:
         swap_file.write("/swapfile none swap defaults 0 0")
 
-# { INSTALLER }________________________________________________________________
+## { INSTALLER }_______________________________________________________________
 
 def installer(mode):
-    # [ PARTITION ]
+    #### [ PARTITION ]
     Msg.console(f":: {_green}Creating and mounting the partition...", wait=0)
     partition = '''label: dos
                    device: /dev/sda
@@ -393,11 +368,11 @@ def installer(mode):
 
     subprocess.run(['sfdisk', '/dev/sda'], text=True, input=partition)
 
-    # -- Formating the File System.
+    #### Formating the File System.
 
     execute(f"mkfs.ext4 /dev/sda1")
 
-    # -- Mounting /dev/sda1 to /mnt.
+    #### Mounting /dev/sda1 to /mnt.
 
     execute(f"mount /dev/sda1 /mnt")
 
@@ -407,10 +382,26 @@ def installer(mode):
 
     Msg.console(f" -> {_blue}Created {os.listdir('/mnt')}", wait=0)
 
-    # [ PACSTRAP ]
+    #### [ PACSTRAP ]
 
+    def pacstrap():
+
+        Msg.console(f":: {_green}Starting pacstrap...", wait=0)
+        pkgs_list = ' '.join(packages('pacstrap'))
+        Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
+
+        execute(f"rm -rf /var/lib/pacman/sync")
+        execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
+        execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
+        execute(f"pacman -Syy")
+
+        run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
+        Msg.concole(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
+
+        
     pacstrap()
     
+    #### Temporary solution due to few failure.
     while True:
         if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
             pacstrap()
