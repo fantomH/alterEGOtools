@@ -396,7 +396,7 @@ def installer(mode):
         execute(f"pacman -Syy")
 
         run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
-        Msg.concole(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
+        Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
         
     pacstrap()
