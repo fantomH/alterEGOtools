@@ -3,7 +3,7 @@
 #
 # ego.py
 #   created        : 2021-06-05 00:03:38 UTC
-#   updated        : 2021-08-12 17:17:08 UTC
+#   updated        : 2021-08-17 15:21:59 UTC
 #   description    : Deploy and update alterEGO Linux.
 # _____________________________________________________________________________
 
@@ -347,6 +347,19 @@ def pacman(mode):
     execute(f"pacman -Syy")
     execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
 
+def pacstrap():
+
+    Msg.console(f":: {_green}Starting pacstrap...", wait=0)
+    pkgs_list = ' '.join(packages('pacstrap'))
+    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
+
+    execute(f"rm -rf /var/lib/pacman/sync")
+    execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
+    execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
+    execute(f"pacman -Syy")
+
+    run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
+    Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
 def swapfile():
 
@@ -357,85 +370,6 @@ def swapfile():
     execute(f"swapon /swapfile")
     with open('/etc/fstab', 'a') as swap_file:
         swap_file.write("/swapfile none swap defaults 0 0")
-
-## { INSTALLER }_______________________________________________________________
-
-def installer(mode):
-    #### [ PARTITION ]
-    Msg.console(f":: {_green}Creating and mounting the partition...", wait=0)
-    partition = '''label: dos
-                   device: /dev/sda
-                   unit: sectors
-                   sector-size: 512
-
-                   /dev/sda1 : start=        2048, type=83, bootable
-                '''
-
-    subprocess.run(['sfdisk', '/dev/sda'], text=True, input=partition)
-
-    #### Formating the File System.
-
-    execute(f"mkfs.ext4 /dev/sda1")
-
-    #### Mounting /dev/sda1 to /mnt.
-
-    execute(f"mount /dev/sda1 /mnt")
-
-    # -- Creating ${HOME}. 
-
-    os.mkdir('/mnt/home')
-
-    Msg.console(f" -> {_blue}Created {os.listdir('/mnt')}", wait=0)
-
-    #### [ PACSTRAP ]
-
-    def pacstrap():
-
-        Msg.console(f":: {_green}Starting pacstrap...", wait=0)
-        pkgs_list = ' '.join(packages('pacstrap'))
-        Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
-
-        execute(f"rm -rf /var/lib/pacman/sync")
-        execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
-        execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
-        execute(f"pacman -Syy")
-
-        run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
-        Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
-
-        
-    pacstrap()
-    
-    #### Temporary solution due to few failure.
-    while True:
-        if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-            pacstrap()
-        else:
-            break
-
-    # [ FSTAB ]
-    Msg.console(f":: {_green}Generating the fstab...", wait=0)
-    subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
-
-    # [ ARCH-ROOT ]
-    Msg.console(f":: {_green}Preparing arch-root...", wait=2)
-    shutil.copy('/root/ego.py', '/mnt/root/ego.py')
-    if mode == 'minimal':
-        execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
-    elif mode == 'beast':
-        execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
-
-    # [ ALL DONE ]
-    all_done = input(f":: {_green}Shutdown [Y/n]? ")
-    if all_done.lower() in ['y', 'yes']:
-        Msg.console(f" -> {_blue}Good Bye!", wait=10)
-        try:
-            execute(f'umount -R /mnt')
-            execute(f'shutdown now') 
-        except:
-            execute(f'shutdown now') 
-    else:
-        Msg.console(f" -> {_blue}Do a manual shutdown when ready.", wait=1)
 
 def sysconfig(mode):
 
@@ -619,27 +553,9 @@ def main():
 
         os.mkdir('/mnt/home')
 
-        Msg.console(f" -> {_blue}Created {os.listdir('/mnt')}", wait=0)
-
         #### [ PACSTRAP ]
 
-        def pacstrap():
-
-            Msg.console(f":: {_green}Starting pacstrap...", wait=0)
-            pkgs_list = ' '.join(packages('pacstrap'))
-            Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
-
-            execute(f"rm -rf /var/lib/pacman/sync")
-            execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
-            execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
-            execute(f"pacman -Syy")
-
-            run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
-            Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
-
-            
         pacstrap()
-        
         #### Temporary solution due to few failure.
         while True:
             if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
