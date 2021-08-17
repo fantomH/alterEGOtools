@@ -17,7 +17,7 @@ import sys
 import threading
 import time
 
-# { GLOBAL VARIABLES }_________________________________________________________
+## { GLOBAL VARIABLES }________________________________________________________
 gitTOOLS = 'https://github.com/fantomH/alterEGOtools.git'
 gitEGO = 'https://github.com/fantomH/alterEGO.git'
 usr_local = '/usr/local'
@@ -339,25 +339,29 @@ def shared_reverse_shell():
         os.symlink(src, dst)
 
 def pacman(mode):
-    Msg.console(f":: {_green}Starting pacman...", wait=0)
+
     pkgs_list = ' '.join(packages('pacman', mode))
-    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
-    # -- Reinstal archlinux-keyring in case of corruption.
-    execute(f"pacman -S archlinux-keyring")
+
+    #### Re-install archlinux-keyring in case of corruption.
+    execute(f"pacman -S --noconfirm archlinux-keyring")
     execute(f"pacman -Syy")
-    execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
+
+    Msg.console(f":: {_green}Starting pacman...", wait=0)
+    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
+    run_pacman = execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
+    Msg.console(f" -> {_blue}Pacman exit code: {run_pacman.returncode}", wait=0)
 
 def pacstrap():
 
-    Msg.console(f":: {_green}Starting pacstrap...", wait=0)
     pkgs_list = ' '.join(packages('pacstrap'))
-    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
 
     execute(f"rm -rf /var/lib/pacman/sync")
     execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
     execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
     execute(f"pacman -Syy")
 
+    Msg.console(f":: {_green}Starting pacstrap...", wait=0)
+    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
     run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
     Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
@@ -371,151 +375,6 @@ def swapfile():
     with open('/etc/fstab', 'a') as swap_file:
         swap_file.write("/swapfile none swap defaults 0 0")
 
-def sysconfig(mode):
-
-    # [ GIT REPOSITORIES ]
-    Msg.console(f":: {_green}Fetching AlterEGO tools, config and other stuff...", wait=0)
-
-    Msg.console(f" -> {_blue}Pulling {gitTOOLS}.", wait=0)
-    git(gitTOOLS, localTOOLS)
-
-    if mode == 'beast':
-        Msg.console(f" -> {_blue}Pulling {gitEGO}.", wait=0)
-        git(gitEGO, localEGO)
-
-    # [ TIMEZONE & CLOCK ]
-    Msg.console(f":: {_green}Setting clock and timezone...", wait=0)
-    os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
-    execute(f'timedatectl set-ntp true')
-    execute(f'hwclock --systohc --utc')
-
-    # [ LOCALE ]
-
-    Msg.console(f":: {_green}Generating locale...", wait=0)
-    execute(f'sed -i "s/#en_US.UTF-8/en_US.UTF-8/" /etc/locale.gen')
-    with open('/etc/locale.conf', 'w') as locale_conf:
-        locale_conf.write('LANG=en_US.UTF-8')
-    os.putenv('LANG', 'en_US.UTF-8')
-    execute(f'locale-gen')
-
-    # [ NETWORK CONFIGURATION ]
-
-    Msg.console(f":: {_green}Setting up network...", wait=0)
-    with open('/etc/hostname', 'w') as etc_hostname:
-        etc_hostname.write(hostname)
-    with open('/etc/hosts', 'w') as etc_hosts:
-        etc_hosts.write(f'''
-127.0.0.1	localhost
-::1		localhost
-127.0.1.1	{hostname}.localdomain	{hostname}
-''')
-
-    Msg.console(f" -> {_blue}Enabling NetworkManager daemon...", wait=0)
-    execute(f'systemctl enable NetworkManager.service')
-
-    # [ POPULATING /etc/skel ]
-
-    if mode == 'beast':
-        Msg.console(f":: {_green}Populating /etc/skel...", wait=0)
-        src = f"{localEGO}/config/"
-        dst = f"/etc/skel/"
-        copy_recursive(src, dst)
-
-    # [ USERS and PASSWORDS ]
-
-    Msg.console(f":: {_green}Configuring users and passwords...", wait=0)
-    Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
-    subprocess.run(['passwd'], input=f'{root_passwd}\n{root_passwd}\n', text=True)
-
-    if mode == 'beast':
-        Msg.console(f" -> {_blue}Creating user {user}", wait=0)
-        execute(f'useradd -m -g users -G wheel {user}') 
-        Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
-        subprocess.run(['passwd', user], input=f'{user_passwd}\n{user_passwd}\n', text=True)
-
-        Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
-        execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
-
-    # [ SHARED RESOURCES ]
-
-    if mode == 'beast':
-        Msg.console(f":: {_green}Deploying shared resources...", wait=0)
-        shared_resources()
-        shared_bin()
-        shared_wordlist()
-        shared_reverse_shell()
-        # -- assets
-        copy_recursive(os.path.join(localEGO, 'share', 'assets'), os.path.join(usr_local, 'share', 'assets'))
-        # -- backgrounds
-        copy_recursive(os.path.join(localEGO, 'share', 'backgrounds'), os.path.join(usr_local, 'share', 'backgrounds'))
-
-    # [ SWAPFILE ]
-
-    swapfile()
-
-    # [ FIX PACMAN MIRRORLIST ]
-
-    # [ PACMAN ]
-
-    pacman(mode)
-    while True:
-        if input(f":: {_green}Re-run pacman [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-            pacman(mode)
-        else:
-            break
-
-    # [ YAY ]
-
-    if mode == 'beast':
-        Msg.console(f":: {_green}Installing YAY...", wait=0)
-        execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
-        execute(f"chown -R {user}:users /opt/yay")
-        execute(f"su {user} -c 'makepkg -si --needed --noconfirm'", cwd='/opt/yay')
-
-        Msg.console(f":: {_green}Installing AUR packages...", wait=0)
-        pkgs_list = ' '.join(packages('yay'))
-        Msg.console(f" -> {_blue}Will be installed:\n{pkgs_list}", wait=0)
-        execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
-
-    # [ SDDM ]
-
-    '''
-    if mode == 'beast':
-        Msg.console(f":: {_green}Deploying sddm and starting the service...", wait=5)
-        shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'), '/etc/sddm.conf')
-        copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm'), '/usr/share/sddm')
-        execute(f'systemctl enable sddm.service')
-    '''
-
-    # [ GENERATING mandb ]
-
-    Msg.console(f":: {_green}Generating mandb...", wait=0)
-    execute(f"mandb")
-
-    # [ SETTING JAVA DEFAULT ]
-
-    # -- Burpsuite
-    # .. Not running with java 16.
-    # .. will need to install jre11-openjdk.
-    # .. $ sudo archlinux-java set java-11-openjdk
-
-    if mode == 'beast':
-        Msg.console(f":: {_green}Fixing Java...", wait=0)
-        execute(f"archlinux-java set java-11-openjdk")
-
-    # [ BOOTLOADER ]
-
-    Msg.console(f":: {_green}Installing and configuring the bootloader...", wait=0)
-    execute(f'grub-install /dev/sda')
-    execute(f'grub-mkconfig -o /boot/grub/grub.cfg')
-
-    # [ VIRTUALBOX SERVICES ]
-
-    if mode == 'beast':
-        Msg.console(f":: {_green}Starting vbox service...", wait=0)
-        execute(f'systemctl start vboxservice.service')
-        execute(f'systemctl enable vboxservice.service')
-    
 def main():
 
     parser = argparse.ArgumentParser()
@@ -553,7 +412,7 @@ def main():
 
         os.mkdir('/mnt/home')
 
-        #### [ PACSTRAP ]
+        ## [ PACSTRAP ]
 
         pacstrap()
         #### Temporary solution due to few failure.
@@ -586,9 +445,150 @@ def main():
                 execute(f'shutdown now') 
         else:
             Msg.console(f" -> {_blue}Do a manual shutdown when ready.", wait=1)
+
     if args.sysconfig:
         mode = args.sysconfig
-        sysconfig(mode)
+
+        # [ GIT REPOSITORIES ]
+        Msg.console(f":: {_green}Fetching AlterEGO tools, config and other stuff...", wait=0)
+
+        Msg.console(f" -> {_blue}Pulling {gitTOOLS}.", wait=0)
+        git(gitTOOLS, localTOOLS)
+
+        if mode == 'beast':
+            Msg.console(f" -> {_blue}Pulling {gitEGO}.", wait=0)
+            git(gitEGO, localEGO)
+
+        # [ TIMEZONE & CLOCK ]
+        Msg.console(f":: {_green}Setting clock and timezone...", wait=0)
+        os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
+        execute(f'timedatectl set-ntp true')
+        execute(f'hwclock --systohc --utc')
+
+        # [ LOCALE ]
+
+        Msg.console(f":: {_green}Generating locale...", wait=0)
+        execute(f'sed -i "s/#en_US.UTF-8/en_US.UTF-8/" /etc/locale.gen')
+        with open('/etc/locale.conf', 'w') as locale_conf:
+            locale_conf.write('LANG=en_US.UTF-8')
+        os.putenv('LANG', 'en_US.UTF-8')
+        execute(f'locale-gen')
+
+        # [ NETWORK CONFIGURATION ]
+
+        Msg.console(f":: {_green}Setting up network...", wait=0)
+        with open('/etc/hostname', 'w') as etc_hostname:
+            etc_hostname.write(hostname)
+        with open('/etc/hosts', 'w') as etc_hosts:
+            etc_hosts.write(f'''
+    127.0.0.1	localhost
+    ::1		localhost
+    127.0.1.1	{hostname}.localdomain	{hostname}
+    ''')
+
+        Msg.console(f" -> {_blue}Enabling NetworkManager daemon...", wait=0)
+        execute(f'systemctl enable NetworkManager.service')
+
+        # [ POPULATING /etc/skel ]
+
+        if mode == 'beast':
+            Msg.console(f":: {_green}Populating /etc/skel...", wait=0)
+            src = f"{localEGO}/config/"
+            dst = f"/etc/skel/"
+            copy_recursive(src, dst)
+
+        # [ USERS and PASSWORDS ]
+
+        Msg.console(f":: {_green}Configuring users and passwords...", wait=0)
+        Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
+        subprocess.run(['passwd'], input=f'{root_passwd}\n{root_passwd}\n', text=True)
+
+        if mode == 'beast':
+            Msg.console(f" -> {_blue}Creating user {user}", wait=0)
+            execute(f'useradd -m -g users -G wheel {user}') 
+            Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
+            subprocess.run(['passwd', user], input=f'{user_passwd}\n{user_passwd}\n', text=True)
+
+            Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
+            execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
+
+        # [ SHARED RESOURCES ]
+
+        if mode == 'beast':
+            Msg.console(f":: {_green}Deploying shared resources...", wait=0)
+            shared_resources()
+            shared_bin()
+            shared_wordlist()
+            shared_reverse_shell()
+            # -- assets
+            copy_recursive(os.path.join(localEGO, 'share', 'assets'), os.path.join(usr_local, 'share', 'assets'))
+            # -- backgrounds
+            copy_recursive(os.path.join(localEGO, 'share', 'backgrounds'), os.path.join(usr_local, 'share', 'backgrounds'))
+
+        # [ SWAPFILE ]
+
+        swapfile()
+
+        ## [ PACMAN ]
+
+        pacman(mode)
+        while True:
+            if input(f":: {_green}Re-run pacman [Y/n]? {_RESET}").lower() in ['y', 'yes']:
+                pacman(mode)
+            else:
+                break
+
+        # [ YAY ]
+
+        if mode == 'beast':
+            Msg.console(f":: {_green}Installing YAY...", wait=0)
+            execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
+            execute(f"chown -R {user}:users /opt/yay")
+            execute(f"su {user} -c 'makepkg -si --needed --noconfirm'", cwd='/opt/yay')
+
+            Msg.console(f":: {_green}Installing AUR packages...", wait=0)
+            pkgs_list = ' '.join(packages('yay'))
+            Msg.console(f" -> {_blue}Will be installed:\n{pkgs_list}", wait=0)
+            execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
+
+        # [ SDDM ]
+
+        '''
+        if mode == 'beast':
+            Msg.console(f":: {_green}Deploying sddm and starting the service...", wait=5)
+            shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'), '/etc/sddm.conf')
+            copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm'), '/usr/share/sddm')
+            execute(f'systemctl enable sddm.service')
+        '''
+
+        # [ GENERATING mandb ]
+
+        Msg.console(f":: {_green}Generating mandb...", wait=0)
+        execute(f"mandb")
+
+        # [ SETTING JAVA DEFAULT ]
+
+        # -- Burpsuite
+        # .. Not running with java 16.
+        # .. will need to install jre11-openjdk.
+        # .. $ sudo archlinux-java set java-11-openjdk
+
+        if mode == 'beast':
+            Msg.console(f":: {_green}Fixing Java...", wait=0)
+            execute(f"archlinux-java set java-11-openjdk")
+
+        # [ BOOTLOADER ]
+
+        Msg.console(f":: {_green}Installing and configuring the bootloader...", wait=0)
+        execute(f'grub-install /dev/sda')
+        execute(f'grub-mkconfig -o /boot/grub/grub.cfg')
+
+        # [ VIRTUALBOX SERVICES ]
+
+        if mode == 'beast':
+            Msg.console(f":: {_green}Starting vbox service...", wait=0)
+            execute(f'systemctl start vboxservice.service')
+            execute(f'systemctl enable vboxservice.service')
     if args.rerun:
         eval(args.rerun)
 
