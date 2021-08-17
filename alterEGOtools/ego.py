@@ -275,8 +275,10 @@ def packages(required_by, mode=None):
     elif required_by == 'pacman':
         if mode == 'minimal':
             pkgs_list = [k for k, v in pkgs.items() if v in ['minimal']]
+        elif mode == 'nice':
+            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'nice']]
         elif mode == 'beast':
-            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'full']]
+            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'nice', 'full']]
     elif required_by == 'yay':
             pkgs_list = [k for k, v in pkgs.items() if v in ['aur']]
 
@@ -371,7 +373,7 @@ def set_users(mode):
     Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
     execute(f"passwd", input=f'{root_passwd}\n{root_passwd}\n')
 
-    if mode == 'beast':
+    if mode == 'beast' or mode == 'nice':
         Msg.console(f" -> {_blue}Creating user {user}", wait=0)
         execute(f"useradd -m -g users -G wheel {user}") 
         Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
@@ -395,8 +397,8 @@ def swapfile():
 def main():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--install", type=str, choices=['minimal', 'beast'], help="Install AlterEGO Linux.")
-    parser.add_argument("--sysconfig", type=str, choices=['minimal', 'beast'], help="Initiate the system configuration after the Installer.")
+    parser.add_argument("--install", type=str, choices=['minimal', 'nice', 'beast'], help="Install AlterEGO Linux.")
+    parser.add_argument("--sysconfig", type=str, choices=['minimal', 'nice', 'beast'], help="Initiate the system configuration after the Installer.")
     parser.add_argument("--rerun", type=str, help="Until I figure out things...")
 
     args = parser.parse_args()
@@ -448,6 +450,8 @@ def main():
         shutil.copy('/root/ego.py', '/mnt/root/ego.py')
         if mode == 'minimal':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
+        elif mode == 'nice':
+            execute(f'arch-chroot /mnt python /root/ego.py --sysconfig nice')
         elif mode == 'beast':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
