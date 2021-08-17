@@ -365,13 +365,30 @@ def pacstrap():
     run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
     Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
+def set_users(mode):
+
+    Msg.console(f":: {_green}Configuring users and passwords...", wait=0)
+    Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
+    execute(f"passwd", input=f'{root_passwd}\n{root_passwd}\n')
+
+    if mode == 'beast':
+        Msg.console(f" -> {_blue}Creating user {user}", wait=0)
+        execute(f"useradd -m -g users -G wheel {user}") 
+        Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
+        execute(f"passwd {user}", input=f"{user_passwd}\n{user_passwd}\n")
+
+        Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
+        execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
+
 def swapfile():
 
     Msg.console(f"{_green}Creating a 1G swapfile...", wait=0)
+
     execute(f"fallocate -l 1G /swapfile")
     os.chmod('/swapfile', 0o600)
     execute(f"mkswap /swapfile")
     execute(f"swapon /swapfile")
+
     with open('/etc/fstab', 'a') as swap_file:
         swap_file.write("/swapfile none swap defaults 0 0")
 
@@ -497,20 +514,9 @@ def main():
             dst = f"/etc/skel/"
             copy_recursive(src, dst)
 
-        # [ USERS and PASSWORDS ]
+        ## [ USERS and PASSWORDS ]
 
-        Msg.console(f":: {_green}Configuring users and passwords...", wait=0)
-        Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
-        subprocess.run(['passwd'], input=f'{root_passwd}\n{root_passwd}\n', text=True)
-
-        if mode == 'beast':
-            Msg.console(f" -> {_blue}Creating user {user}", wait=0)
-            execute(f'useradd -m -g users -G wheel {user}') 
-            Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
-            subprocess.run(['passwd', user], input=f'{user_passwd}\n{user_passwd}\n', text=True)
-
-            Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
-            execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
+        set_users(mode)
 
         # [ SHARED RESOURCES ]
 
@@ -525,7 +531,7 @@ def main():
             # -- backgrounds
             copy_recursive(os.path.join(localEGO, 'share', 'backgrounds'), os.path.join(usr_local, 'share', 'backgrounds'))
 
-        # [ SWAPFILE ]
+        ## [ SWAPFILE ]
 
         swapfile()
 
