@@ -186,11 +186,16 @@ def copy_recursive(src, dst):
                 os.remove(dst_file)
             shutil.copy2(src_file, dst_file)
 
-def execute(cmd, cwd=None):
-    #### TODO: Send to logs.
+def execute(cmd, cwd=None, shell=False, text=True, input=None):
 
-    cmd_list = shlex.split(cmd)
-    cmd_run = subprocess.run(cmd_list, cwd=cwd)
+    if shell == True:
+        cmd_list = cmd
+    else:
+        cmd_list = shlex.split(cmd)
+    if input:
+        input = input.encode()
+        
+    cmd_run = subprocess.run(cmd_list, cwd=cwd, shell=shell, input=input)
 
     CommandResults = namedtuple('CommandResults', ['returncode'])
     return CommandResults(cmd_run.returncode)
