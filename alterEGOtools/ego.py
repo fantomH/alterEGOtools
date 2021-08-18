@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-# { alterEGO Linux: "Open the vault of knowledge" }
-#
-# ego.py
-#   created        : 2021-06-05 00:03:38 UTC
-#   updated        : 2021-08-17 15:21:59 UTC
-#   description    : Deploy and update alterEGO Linux.
-# _____________________________________________________________________________
+
+## { alterEGO Linux: "Open the vault of knowledge" }___________________________
+##
+## ego.py
+##   created        : 2021-06-05 00:03:38 UTC
+##   updated        : 2021-08-17 15:21:59 UTC
+##   description    : Deploy and update alterEGO Linux.
+## ____________________________________________________________________________
 
 import argparse
 from collections import namedtuple
@@ -18,6 +19,7 @@ import threading
 import time
 
 ## { GLOBAL VARIABLES }________________________________________________________
+
 gitTOOLS = 'https://github.com/fantomH/alterEGOtools.git'
 gitEGO = 'https://github.com/fantomH/alterEGO.git'
 usr_local = '/usr/local'
@@ -34,7 +36,7 @@ pkgs = {
         'alsa-utils':               'nice',
         'arp-scan':                 'full',
         'base':                     'basic',
-        'base-devel':               'basic',
+        'base-devel':               'minimal',
         'bat':                      'nice',
         'bc':                       'nice',
         'bind':                     'nice',
@@ -43,111 +45,111 @@ pkgs = {
         'brave-bin':                'aur',
         'burpsuite':                'aur',
         'cmatrix':                  'full',
-        'code':                     'full',
+        'code':                     'nice',
         'cronie':                   'nice',
         'dirbuster':                'aur',
-        'dos2unix':                 'full',
-        'entr':                     'full',
-        'exfat-utils':              'full',
-        'feh':                      'full',
-        'ffmpeg':                   'full',
-        'firefox':                  'full',
-        'freerdp':                  'full',
+        'dos2unix':                 'nice',
+        'entr':                     'nice',
+        'exfat-utils':              'nice',
+        'feh':                      'nice',
+        'ffmpeg':                   'nice',
+        'firefox':                  'nice',
+        'freerdp':                  'nice',
         'fzf':                      'minimal',
-        'gimp':                     'full',
-        'git':                      'basic',
-        'gnu-netcat':               'full',
-        'go':                       'full',
+        'gimp':                     'nice',
+        'git':                      'minimal',
+        'gnu-netcat':               'nice',
+        'go':                       'nice',
         'gobuster-git':             'aur',
         'gromit-mpx-git':           'aur',
-        'grub':                     'basic',
-        'htop':                     'full',
-        'i3-gaps':                  'full',
-        'imagemagick':              'full',
-        'inkscape':                 'full',
+        'grub':                     'minimal',
+        'htop':                     'nice',
+        'i3-gaps':                  'nice',
+        'imagemagick':              'nice',
+        'inkscape':                 'nice',
         'inxi':                     'aur',
         'john':                     'full',
-        'jq':                       'full',
+        'jq':                       'nice',
         'jre11-openjdk':            'full',
-        'libreoffice-fresh':        'full',
+        'libreoffice-fresh':        'nice',
         'librespeed-cli-bin':       'aur',
-        'linux':                    'basic',
+        'linux':                    'minimal',
         'lynx':                     'minimal',
         'man-db':                   'minimal',
         'man-pages':                'minimal',
         'mariadb-clients':          'full',
         'metasploit':               'full',
-        'mlocate':                  'full',
-        'mtools':                   'full',
+        'mlocate':                  'nice',
+        'mtools':                   'nice',
         'mtr':                      'full',
         'net-tools':                'full',
-        'networkmanager':           'basic',
-        'nfs-utils':                'full',
+        'networkmanager':           'minimal',
+        'nfs-utils':                'nice',
         'nikto':                    'full',
         'nmap':                     'full',
-        'notify-osd':               'full',
-        'ntfs-3g':                  'full',
+        'notify-osd':               'nice',
+        'ntfs-3g':                  'nice',
         'openssh':                  'minimal',
         'openvpn':                  'minimal',
         'p7zip':                    'full',
         'pandoc-bin':               'aur',
-        'pavucontrol':              'full',
+        'pavucontrol':              'nice',
         'perl-image-exiftool':      'full',
         'php':                      'full',
-        'polkit-gnome':             'full',
+        'polkit-gnome':             'nice',
         'postgresql':               'full',
         'powershell-bin':           'aur',
-        'pptpclient':               'full',
-        'pulseaudio':               'full',
+        'pptpclient':               'nice',
+        'pulseaudio':               'nice',
         'pv':                       'full',
-        'python':                   'basic',
+        'python':                   'minimal',
         'python-beautifulsoup4':    'full',
         'python-pandas':            'full',
-        'python-pip':               'full',
+        'python-pip':               'nice',
         'python-pyaml':             'full',
         'python-rich':              'full',
         'qrencode':                 'full',
-        'qtile':                    'full',
-        'ranger':                   'full',
-        'remmina':                  'full',
+        'qtile':                    'nice',
+        'ranger':                   'nice',
+        'remmina':                  'nice',
         'rsync':                    'minimal',
-        'screen':                   'full',
+        'screen':                   'nice',
         'screenkey':                'full',
         #'sddm':                     'full',
-        'shellcheck':               'full',
+        'shellcheck':               'nice',
         'simple-mtpfs':             'aur',
         'sqlitebrowser':            'full',
-        'sxiv':                     'full',
+        'sxiv':                     'nice',
         'tcpdump':                  'full',
         'tesseract':                'full',
         'tesseract-data-eng':       'full',
         'tesseract-data-fra':       'full',
-        'thunar':                   'full',
-        'thunar-volman':            'full',
+        'thunar':                   'nice',
+        'thunar-volman':            'nice',
         'tidy':                     'full',
         'tk':                       'full',
         'tmux':                     'minimal',
         'traceroute':               'full',
         'transmission-gtk':         'full',
-        'tree':                     'full',
-        'unzip':                    'full',
-        'vim':                      'basic',
-        'virtualbox-guest-utils':   'full',
-        'w3m':                      'full',
+        'tree':                     'nice',
+        'unzip':                    'nice',
+        'vim':                      'minimal',
+        'virtualbox-guest-utils':   'nice',
+        'w3m':                      'nice',
         'wfuzz-git':                'aur',
         'wget':                     'minimal',
         'whois':                    'full',
         'wireshark-qt':             'full',
-        'xclip':                    'full',
-        'xcompmgr':                 'full',
-        'xdotool':                  'full',
-        'xfce4-terminal':           'full',
-        'xorg-server':              'full',
-        'xorg-xinit':               'full',
-        'xterm':                    'full',
-        'youtube-dl':               'full',
-        'zathura':                  'full',
-        'zathura-pdf-mupdf':        'full',
+        'xclip':                    'nice',
+        'xcompmgr':                 'nice',
+        'xdotool':                  'nice',
+        'xfce4-terminal':           'nice',
+        'xorg-server':              'nice',
+        'xorg-xinit':               'nice',
+        'xterm':                    'nice',
+        'youtube-dl':               'nice',
+        'zathura':                  'nice',
+        'zathura-pdf-mupdf':        'nice',
         'zbar':                     'full',
         }
 
@@ -284,62 +286,6 @@ def packages(required_by, mode=None):
 
     return pkgs_list
 
-def shared_resources():
-    # -- TODO: All file copying should be one functions.
-    # .. recursive, copy, symlinks...
-
-    # [ bookmarks.db ]_________________________________________________________
-    f = 'bookmarks.db'
-    Msg.console(f":: {_green}Deploying {f} to /usr/local/share...", wait=0)
-    src = os.path.join(localEGO, 'share', f)
-    dst = os.path.join('/usr/local/share', f)
-    os.symlink(src, dst)
-
-def shared_bin():
-    # -- Deploys applications.
-
-    Msg.console(f":: {_green}Deploying application to /usr/local/bin...", wait=0)
-    localEGO_bin = f"{localEGO}/bin"
-    files = os.listdir(localEGO_bin)
-
-    for f in files:
-        Msg.console(f" -> {_blue}{f}", wait=0)
-        src = os.path.join(localEGO_bin, f)
-        dst = os.path.join('/usr/local/bin', f)
-        os.symlink(src, dst)
-
-def shared_wordlist():
-    # -- Deploys wordlists.
-
-    Msg.console(f":: {_green}Deploying application to /usr/local/share/wordlist...", wait=0)
-    if not os.path.exists('/usr/local/share/wordlist'):
-        os.mkdir('/usr/local/share/wordlist')
-
-    localEGO_wordlist = f"{localEGO}/share/wordlist"
-    files = os.listdir(localEGO_wordlist)
-
-    for f in files:
-        Msg.console(f" -> {_blue}{f}", wait=0)
-        src = os.path.join(localEGO_wordlist, f)
-        dst = os.path.join('/usr/local/share/wordlist', f)
-        os.symlink(src, dst)
-
-def shared_reverse_shell():
-    # -- Deploys reverse shells.
-
-    Msg.console(f":: {_green}Deploying application to /usr/local/share/reverse_shell...", wait=0)
-    if not os.path.exists('/usr/local/share/reverse_shell'):
-        os.mkdir('/usr/local/share/reverse_shell')
-
-    localEGO_reverse_shell = f"{localEGO}/share/reverse_shell"
-    files = os.listdir(localEGO_reverse_shell)
-
-    for f in files:
-        Msg.console(f" -> {_blue}{f}", wait=1)
-        src = os.path.join(localEGO_reverse_shell, f)
-        dst = os.path.join('/usr/local/share/reverse_shell', f)
-        os.symlink(src, dst)
-
 def pacman(mode):
 
     pkgs_list = ' '.join(packages('pacman', mode))
@@ -382,6 +328,63 @@ def set_users(mode):
         Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
         execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
 
+def shared_bin():
+    #### Deploys applications.
+
+    localEGO_bin = f"{localEGO}/bin"
+    files = os.listdir(localEGO_bin)
+
+    Msg.console(f":: {_green}Deploying application to /usr/local/bin...", wait=0)
+    for f in files:
+        Msg.console(f" -> {_blue}{f}", wait=0)
+        src = os.path.join(localEGO_bin, f)
+        dst = os.path.join('/usr/local/bin', f)
+        os.symlink(src, dst)
+
+def shared_resources():
+    # -- TODO: All file copying should be one functions.
+    # .. recursive, copy, symlinks...
+
+    ## [ bookmarks.db ]
+
+    f = 'bookmarks.db'
+    Msg.console(f":: {_green}Deploying {f} to /usr/local/share...", wait=0)
+    src = os.path.join(localEGO, 'share', f)
+    dst = os.path.join('/usr/local/share', f)
+    os.symlink(src, dst)
+
+def shared_reverse_shell():
+    #### Deploys reverse shells.
+
+    if not os.path.exists('/usr/local/share/reverse_shell'):
+        os.mkdir('/usr/local/share/reverse_shell')
+
+    localEGO_reverse_shell = f"{localEGO}/share/reverse_shell"
+    files = os.listdir(localEGO_reverse_shell)
+
+    Msg.console(f":: {_green}Deploying application to /usr/local/share/reverse_shell...", wait=0)
+    for f in files:
+        Msg.console(f" -> {_blue}{f}", wait=1)
+        src = os.path.join(localEGO_reverse_shell, f)
+        dst = os.path.join('/usr/local/share/reverse_shell', f)
+        os.symlink(src, dst)
+
+def shared_wordlist():
+    #### Deploys wordlists.
+
+    if not os.path.exists('/usr/local/share/wordlist'):
+        os.mkdir('/usr/local/share/wordlist')
+
+    localEGO_wordlist = f"{localEGO}/share/wordlist"
+    files = os.listdir(localEGO_wordlist)
+
+    Msg.console(f":: {_green}Deploying application to /usr/local/share/wordlist...", wait=0)
+    for f in files:
+        Msg.console(f" -> {_blue}{f}", wait=0)
+        src = os.path.join(localEGO_wordlist, f)
+        dst = os.path.join('/usr/local/share/wordlist', f)
+        os.symlink(src, dst)
+
 def swapfile():
 
     Msg.console(f"{_green}Creating a 1G swapfile...", wait=0)
@@ -394,6 +397,7 @@ def swapfile():
     with open('/etc/fstab', 'a') as swap_file:
         swap_file.write("/swapfile none swap defaults 0 0")
 
+## { INSTALLER }_______________________________________________________________
 def main():
 
     parser = argparse.ArgumentParser()
@@ -403,11 +407,13 @@ def main():
 
     args = parser.parse_args()
 
+    ## { PARTITION SET UP }____________________________________________________
     if args.install:
         mode = args.install
         Msg.console(f":: {_green}This will install AlterEGO Linux in {mode} mode...", wait=3)
 
-        #### [ PARTITION ]
+        ## [ PARTITION ]
+
         Msg.console(f":: {_green}Creating and mounting the partition...", wait=0)
         partition = '''label: dos
                     device: /dev/sda
@@ -417,7 +423,7 @@ def main():
                     /dev/sda1 : start=        2048, type=83, bootable
                     '''
 
-        subprocess.run(['sfdisk', '/dev/sda'], text=True, input=partition)
+        execute(f"sfdisk /dev/sda", input=partition)
 
         #### Formating the File System.
 
@@ -427,13 +433,14 @@ def main():
 
         execute(f"mount /dev/sda1 /mnt")
 
-        # -- Creating ${HOME}. 
+        #### Creating ${HOME}. 
 
         os.mkdir('/mnt/home')
 
         ## [ PACSTRAP ]
 
         pacstrap()
+
         #### Temporary solution due to few failure.
         while True:
             if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
@@ -442,12 +449,17 @@ def main():
                 break
 
         # [ FSTAB ]
-        Msg.console(f":: {_green}Generating the fstab...", wait=0)
-        subprocess.run('genfstab -U /mnt >> /mnt/etc/fstab', shell=True)
 
-        # [ ARCH-ROOT ]
+        Msg.console(f":: {_green}Generating the fstab...", wait=0)
+        execute(f"genfstab -U /mnt >> /mnt/etc/fstab", shell=True)
+
+        # [ ARCH-CHROOT ]
+
+        #### Moves to chroot to configure the new system.
+
         Msg.console(f":: {_green}Preparing arch-root...", wait=2)
         shutil.copy('/root/ego.py', '/mnt/root/ego.py')
+
         if mode == 'minimal':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
         elif mode == 'nice':
@@ -456,6 +468,8 @@ def main():
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
         # [ ALL DONE ]
+
+        #### Returns from chroot.
         all_done = input(f":: {_green}Shutdown [Y/n]? ")
         if all_done.lower() in ['y', 'yes']:
             Msg.console(f" -> {_blue}Good Bye!", wait=10)
@@ -467,10 +481,23 @@ def main():
         else:
             Msg.console(f" -> {_blue}Do a manual shutdown when ready.", wait=1)
 
+    ## { SYSTEM CONFIGURATION }________________________________________________
     if args.sysconfig:
         mode = args.sysconfig
 
-        # [ GIT REPOSITORIES ]
+        ## [ PACMAN ]
+
+        pacman(mode)
+
+        #### Temporary solution due to few failure.
+        while True:
+            if input(f":: {_green}Re-run pacman [Y/n]? {_RESET}").lower() in ['y', 'yes']:
+                pacman(mode)
+            else:
+                break
+
+        ## [ GIT REPOSITORIES ]
+
         Msg.console(f":: {_green}Fetching AlterEGO tools, config and other stuff...", wait=0)
 
         Msg.console(f" -> {_blue}Pulling {gitTOOLS}.", wait=0)
@@ -480,24 +507,28 @@ def main():
             Msg.console(f" -> {_blue}Pulling {gitEGO}.", wait=0)
             git(gitEGO, localEGO)
 
-        # [ TIMEZONE & CLOCK ]
+        ## [ TIMEZONE & CLOCK ]
+
         Msg.console(f":: {_green}Setting clock and timezone...", wait=0)
+
         os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
         execute(f'timedatectl set-ntp true')
         execute(f'hwclock --systohc --utc')
 
-        # [ LOCALE ]
+        ## [ LOCALE ]
 
         Msg.console(f":: {_green}Generating locale...", wait=0)
+
         execute(f'sed -i "s/#en_US.UTF-8/en_US.UTF-8/" /etc/locale.gen')
         with open('/etc/locale.conf', 'w') as locale_conf:
             locale_conf.write('LANG=en_US.UTF-8')
         os.putenv('LANG', 'en_US.UTF-8')
         execute(f'locale-gen')
 
-        # [ NETWORK CONFIGURATION ]
+        ## [ NETWORK CONFIGURATION ]
 
         Msg.console(f":: {_green}Setting up network...", wait=0)
+
         with open('/etc/hostname', 'w') as etc_hostname:
             etc_hostname.write(hostname)
         with open('/etc/hosts', 'w') as etc_hosts:
@@ -510,7 +541,7 @@ def main():
         Msg.console(f" -> {_blue}Enabling NetworkManager daemon...", wait=0)
         execute(f'systemctl enable NetworkManager.service')
 
-        # [ POPULATING /etc/skel ]
+        ## [ POPULATING /etc/skel ]
 
         if mode == 'beast' or mode == 'nice':
             Msg.console(f":: {_green}Populating /etc/skel...", wait=0)
@@ -522,7 +553,7 @@ def main():
 
         set_users(mode)
 
-        # [ SHARED RESOURCES ]
+        ## [ SHARED RESOURCES ]
 
         if mode == 'beast':
             Msg.console(f":: {_green}Deploying shared resources...", wait=0)
@@ -539,18 +570,9 @@ def main():
 
         swapfile()
 
-        ## [ PACMAN ]
+        ## [ YAY ]
 
-        pacman(mode)
-        while True:
-            if input(f":: {_green}Re-run pacman [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-                pacman(mode)
-            else:
-                break
-
-        # [ YAY ]
-
-        if mode == 'beast':
+        if mode == 'beast' or mode == 'nice':
             Msg.console(f":: {_green}Installing YAY...", wait=0)
             execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
             execute(f"chown -R {user}:users /opt/yay")
@@ -561,7 +583,7 @@ def main():
             Msg.console(f" -> {_blue}Will be installed:\n{pkgs_list}", wait=0)
             execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
 
-        # [ SDDM ]
+        ## [ SDDM ]
 
         '''
         if mode == 'beast':
@@ -571,38 +593,39 @@ def main():
             execute(f'systemctl enable sddm.service')
         '''
 
-        # [ GENERATING mandb ]
+        ## [ GENERATING mandb ]
 
         Msg.console(f":: {_green}Generating mandb...", wait=0)
         execute(f"mandb")
 
-        # [ SETTING JAVA DEFAULT ]
+        ## [ SETTING JAVA DEFAULT ]
 
-        # -- Burpsuite
-        # .. Not running with java 16.
-        # .. will need to install jre11-openjdk.
-        # .. $ sudo archlinux-java set java-11-openjdk
+        #### Burpsuite not running with java 16.
+        #### Will need to install jre11-openjdk.
+        #### $ sudo archlinux-java set java-11-openjdk
 
         if mode == 'beast':
             Msg.console(f":: {_green}Fixing Java...", wait=0)
             execute(f"archlinux-java set java-11-openjdk")
 
-        # [ BOOTLOADER ]
+        ## [ BOOTLOADER ]
 
         Msg.console(f":: {_green}Installing and configuring the bootloader...", wait=0)
         execute(f'grub-install /dev/sda')
         execute(f'grub-mkconfig -o /boot/grub/grub.cfg')
 
-        # [ VIRTUALBOX SERVICES ]
+        ## [ VIRTUALBOX SERVICES ]
 
         if mode == 'beast' or mode == 'nice':
             Msg.console(f":: {_green}Starting vbox service...", wait=0)
             execute(f'systemctl start vboxservice.service')
             execute(f'systemctl enable vboxservice.service')
+
+    ## { TESTING }_____________________________________________________________
     if args.rerun:
         eval(args.rerun)
 
 if __name__ == '__main__':
     main()
 
-# { FIN }______________________________________________________________________
+## { FIN }_____________________________________________________________________
