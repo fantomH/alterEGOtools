@@ -282,19 +282,6 @@ def packages(required_by, mode=None):
 
     return pkgs_list
 
-def pacman(mode):
-
-    pkgs_list = ' '.join(packages('pacman', mode))
-
-    #### Re-install archlinux-keyring in case of corruption.
-    execute(f"pacman -S --noconfirm archlinux-keyring")
-    execute(f"pacman -Syy")
-
-    Msg.console(f":: {_green}Starting pacman...", wait=0)
-    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
-    run_pacman = execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
-    Msg.console(f" -> {_blue}Pacman exit code: {run_pacman.returncode}", wait=0)
-
 def pacstrap():
 
     execute(f"rm -rf /var/lib/pacman/sync")
@@ -481,6 +468,26 @@ def main():
         mode = args.sysconfig
 
         ## [ PACMAN ]
+
+        #### Enabling ParallelDownloads in pacman.conf
+
+        with open( '/etc/pacman.conf', 'r+' ) as f:
+            data = f.read()
+            inplace_string = f.replace("#ParallelDownloads = 5", "ParallelDownloads = 8")
+            f.write(inplace_string)
+
+        def pacman(mode):
+
+            pkgs_list = ' '.join(packages('pacman', mode))
+
+            #### Re-install archlinux-keyring in case of corruption.
+            execute(f"pacman -S --noconfirm archlinux-keyring")
+            execute(f"pacman -Syy")
+
+            Msg.console(f":: {_green}Starting pacman...", wait=0)
+            Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
+            run_pacman = execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
+            Msg.console(f" -> {_blue}Pacman exit code: {run_pacman.returncode}", wait=0)
 
         pacman(mode)
 
