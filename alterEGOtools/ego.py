@@ -35,7 +35,6 @@ user_passwd = 'password1'
 pkgs = {
         'alsa-utils':               'nice',
         'arp-scan':                 'full',
-        'base':                     'basic',
         'base-devel':               'minimal',
         'bat':                      'nice',
         'bc':                       'nice',
@@ -102,7 +101,6 @@ pkgs = {
         'pptpclient':               'nice',
         'pulseaudio':               'nice',
         'pv':                       'full',
-        'python':                   'minimal',
         'python-beautifulsoup4':    'full',
         'python-pandas':            'full',
         'python-pip':               'nice',
@@ -272,9 +270,7 @@ _RESET = Msg.color('reset')
 
 def packages(required_by, mode=None):
 
-    if required_by == 'pacstrap':
-        pkgs_list = [k for k, v in pkgs.items() if v in ['basic']]
-    elif required_by == 'pacman':
+    if required_by == 'pacman':
         if mode == 'minimal':
             pkgs_list = [k for k, v in pkgs.items() if v in ['minimal']]
         elif mode == 'nice':
@@ -301,16 +297,14 @@ def pacman(mode):
 
 def pacstrap():
 
-    pkgs_list = ' '.join(packages('pacstrap'))
-
     execute(f"rm -rf /var/lib/pacman/sync")
     execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
     execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
     execute(f"pacman -Syy")
 
     Msg.console(f":: {_green}Starting pacstrap...", wait=0)
-    Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
-    run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
+    Msg.console(f" -> {_blue}Will install:\nbase\npython", wait=0)
+    run_pacstrap = execute(f"pacstrap /mnt base python")
     Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
 def set_users(mode):
@@ -398,6 +392,7 @@ def swapfile():
         swap_file.write("/swapfile none swap defaults 0 0")
 
 ## { INSTALLER }_______________________________________________________________
+
 def main():
 
     parser = argparse.ArgumentParser()
