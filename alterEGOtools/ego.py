@@ -473,7 +473,7 @@ def main():
 
         with open( '/etc/pacman.conf', 'r+' ) as f:
             data = f.read()
-            inplace_string = f.replace("#ParallelDownloads = 5", "ParallelDownloads = 8")
+            inplace_string = data.replace("#ParallelDownloads = 5", "ParallelDownloads = 8")
             f.write(inplace_string)
 
         def pacman(mode):
