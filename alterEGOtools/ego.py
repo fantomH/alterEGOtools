@@ -31,20 +31,20 @@ user = 'ghost'
 user_passwd = 'password1'
 
 pkgs = {
-        'alsa-utils':               'full',
+        'alsa-utils':               'nice',
         'arp-scan':                 'full',
         'base':                     'basic',
         'base-devel':               'basic',
-        'bat':                      'full',
-        'bc':                       'full',
-        'bind':                     'full',
+        'bat':                      'nice',
+        'bc':                       'nice',
+        'bind':                     'nice',
         'binwalk':                  'full',
-        'bleachbit':                'full',
+        'bleachbit':                'nice',
         'brave-bin':                'aur',
         'burpsuite':                'aur',
         'cmatrix':                  'full',
         'code':                     'full',
-        'cronie':                   'full',
+        'cronie':                   'nice',
         'dirbuster':                'aur',
         'dos2unix':                 'full',
         'entr':                     'full',
@@ -476,7 +476,7 @@ def main():
         Msg.console(f" -> {_blue}Pulling {gitTOOLS}.", wait=0)
         git(gitTOOLS, localTOOLS)
 
-        if mode == 'beast':
+        if mode == 'beast' or mode == 'nice':
             Msg.console(f" -> {_blue}Pulling {gitEGO}.", wait=0)
             git(gitEGO, localEGO)
 
@@ -512,7 +512,7 @@ def main():
 
         # [ POPULATING /etc/skel ]
 
-        if mode == 'beast':
+        if mode == 'beast' or mode == 'nice':
             Msg.console(f":: {_green}Populating /etc/skel...", wait=0)
             src = f"{localEGO}/config/"
             dst = f"/etc/skel/"
@@ -595,7 +595,7 @@ def main():
 
         # [ VIRTUALBOX SERVICES ]
 
-        if mode == 'beast':
+        if mode == 'beast' or mode == 'nice':
             Msg.console(f":: {_green}Starting vbox service...", wait=0)
             execute(f'systemctl start vboxservice.service')
             execute(f'systemctl enable vboxservice.service')
