@@ -282,33 +282,6 @@ def packages(required_by, mode=None):
 
     return pkgs_list
 
-def pacstrap():
-
-    execute(f"rm -rf /var/lib/pacman/sync")
-    execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
-    execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
-    execute(f"pacman -Syy")
-
-    Msg.console(f":: {_green}Starting pacstrap...", wait=0)
-    Msg.console(f" -> {_blue}Will install:\nbase\npython", wait=0)
-    run_pacstrap = execute(f"pacstrap /mnt base python")
-    Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
-
-def set_users(mode):
-
-    Msg.console(f":: {_green}Configuring users and passwords...", wait=0)
-    Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
-    execute(f"passwd", input=f'{root_passwd}\n{root_passwd}\n')
-
-    if mode == 'beast' or mode == 'nice':
-        Msg.console(f" -> {_blue}Creating user {user}", wait=0)
-        execute(f"useradd -m -g users -G wheel {user}") 
-        Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
-        execute(f"passwd {user}", input=f"{user_passwd}\n{user_passwd}\n")
-
-        Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
-        execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
-
 def shared_bin():
     #### Deploys applications.
 
@@ -366,17 +339,6 @@ def shared_wordlist():
         dst = os.path.join('/usr/local/share/wordlist', f)
         os.symlink(src, dst)
 
-def swapfile():
-
-    Msg.console(f"{_green}Creating a 1G swapfile...", wait=0)
-
-    execute(f"fallocate -l 1G /swapfile")
-    os.chmod('/swapfile', 0o600)
-    execute(f"mkswap /swapfile")
-    execute(f"swapon /swapfile")
-
-    with open('/etc/fstab', 'a') as swap_file:
-        swap_file.write("/swapfile none swap defaults 0 0")
 
 ## { INSTALLER }_______________________________________________________________
 
@@ -390,6 +352,7 @@ def main():
     args = parser.parse_args()
 
     ## { PARTITION SET UP }____________________________________________________
+
     if args.install:
         mode = args.install
         Msg.console(f":: {_green}This will install AlterEGO Linux in {mode} mode...", wait=3)
@@ -408,18 +371,33 @@ def main():
         execute(f"sfdisk /dev/sda", input=partition)
 
         #### Formating the File System.
-
         execute(f"mkfs.ext4 /dev/sda1")
 
         #### Mounting /dev/sda1 to /mnt.
-
         execute(f"mount /dev/sda1 /mnt")
 
         #### Creating ${HOME}. 
-
         os.mkdir('/mnt/home')
 
         ## [ PACSTRAP ]
+
+        #### Enabling ParallelDownloads in pacman.conf
+        with open( '/etc/pacman.conf', 'r+' ) as f:
+            data = f.read()
+            inplace_string = data.replace("#ParallelDownloads = 5", "ParallelDownloads = 8")
+            f.write(inplace_string)
+
+        def pacstrap():
+
+            execute(f"rm -rf /var/lib/pacman/sync")
+            execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
+            execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
+            execute(f"pacman -Syy")
+
+            Msg.console(f":: {_green}Starting pacstrap...", wait=0)
+            Msg.console(f" -> {_blue}Will install:\nbase\npython", wait=0)
+            run_pacstrap = execute(f"pacstrap /mnt base python")
+            Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
         pacstrap()
 
@@ -437,11 +415,10 @@ def main():
 
         # [ ARCH-CHROOT ]
 
-        #### Moves to chroot to configure the new system.
-
         Msg.console(f":: {_green}Preparing arch-root...", wait=2)
         shutil.copy('/root/ego.py', '/mnt/root/ego.py')
 
+        #### Moves to chroot to configure the new system.
         if mode == 'minimal':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
         elif mode == 'nice':
@@ -464,13 +441,13 @@ def main():
             Msg.console(f" -> {_blue}Do a manual shutdown when ready.", wait=1)
 
     ## { SYSTEM CONFIGURATION }________________________________________________
+
     if args.sysconfig:
         mode = args.sysconfig
 
         ## [ PACMAN ]
 
         #### Enabling ParallelDownloads in pacman.conf
-
         with open( '/etc/pacman.conf', 'r+' ) as f:
             data = f.read()
             inplace_string = data.replace("#ParallelDownloads = 5", "ParallelDownloads = 8")
@@ -535,10 +512,10 @@ def main():
             etc_hostname.write(hostname)
         with open('/etc/hosts', 'w') as etc_hosts:
             etc_hosts.write(f'''
-    127.0.0.1	localhost
-    ::1		localhost
-    127.0.1.1	{hostname}.localdomain	{hostname}
-    ''')
+                            127.0.0.1	localhost
+                            ::1		localhost
+                            127.0.1.1	{hostname}.localdomain	{hostname}
+                            ''')
 
         Msg.console(f" -> {_blue}Enabling NetworkManager daemon...", wait=0)
         execute(f'systemctl enable NetworkManager.service')
@@ -553,7 +530,18 @@ def main():
 
         ## [ USERS and PASSWORDS ]
 
-        set_users(mode)
+        Msg.console(f":: {_green}Configuring users and passwords...", wait=0)
+        Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
+        execute(f"passwd", input=f'{root_passwd}\n{root_passwd}\n')
+
+        if mode == 'beast' or mode == 'nice':
+            Msg.console(f" -> {_blue}Creating user {user}", wait=0)
+            execute(f"useradd -m -g users -G wheel {user}") 
+            Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
+            execute(f"passwd {user}", input=f"{user_passwd}\n{user_passwd}\n")
+
+            Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
+            execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
 
         ## [ SHARED RESOURCES ]
 
@@ -570,7 +558,15 @@ def main():
 
         ## [ SWAPFILE ]
 
-        swapfile()
+        Msg.console(f"{_green}Creating a 1G swapfile...", wait=0)
+
+        execute(f"fallocate -l 1G /swapfile")
+        os.chmod('/swapfile', 0o600)
+        execute(f"mkswap /swapfile")
+        execute(f"swapon /swapfile")
+
+        with open('/etc/fstab', 'a') as swap_file:
+            swap_file.write("/swapfile none swap defaults 0 0")
 
         ## [ YAY ]
 
@@ -587,13 +583,12 @@ def main():
 
         ## [ SDDM ]
 
-        '''
-        if mode == 'beast':
-            Msg.console(f":: {_green}Deploying sddm and starting the service...", wait=5)
-            shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'), '/etc/sddm.conf')
-            copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm'), '/usr/share/sddm')
-            execute(f'systemctl enable sddm.service')
-        '''
+        #### Disabled for now. Still prefer to login in the traditional way.
+        # if mode == 'beast':
+            # Msg.console(f":: {_green}Deploying sddm and starting the service...", wait=5)
+            # shutil.copy(os.path.join(localEGO, 'global', 'etc', 'sddm.conf'), '/etc/sddm.conf')
+            # copy_recursive(os.path.join(localEGO, 'global', 'usr', 'share', 'sddm'), '/usr/share/sddm')
+            # execute(f'systemctl enable sddm.service')
 
         ## [ GENERATING mandb ]
 
@@ -624,6 +619,7 @@ def main():
             execute(f'systemctl enable vboxservice.service')
 
     ## { TESTING }_____________________________________________________________
+
     if args.rerun:
         eval(args.rerun)
 
