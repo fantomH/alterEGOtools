@@ -4,7 +4,7 @@
 ##
 ## ego.py
 ##   created        : 2021-06-05 00:03:38 UTC
-##   updated        : 2021-08-20 09:51:04 UTC
+##   updated        : 2021-08-20 23:46:20 UTC
 ##   description    : Deploy and update alterEGO Linux.
 ## ____________________________________________________________________________
 
@@ -382,10 +382,13 @@ def main():
         ## [ PACSTRAP ]
 
         #### Enabling ParallelDownloads in pacman.conf
-        with open( '/etc/pacman.conf', 'r+' ) as f:
-            data = f.read()
-            inplace_string = data.replace("#ParallelDownloads = 5", "ParallelDownloads = 8")
-            f.write(inplace_string)
+        with open('/etc/pacman.conf', 'r') as fin:
+            with open('/tmp/pacm.conf', 'w') as fout:
+                for line in fin.readlines():
+                    if "#ParallelDownloads = 5" in line:
+                        fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 8"))
+                    else:
+                        fout.write(line)
 
         def pacstrap():
 
@@ -448,10 +451,13 @@ def main():
         ## [ PACMAN ]
 
         #### Enabling ParallelDownloads in pacman.conf
-        with open( '/etc/pacman.conf', 'r+' ) as f:
-            data = f.read()
-            inplace_string = data.replace("#ParallelDownloads = 5", "ParallelDownloads = 8")
-            f.write(inplace_string)
+        with open('/etc/pacman.conf', 'r') as fin:
+            with open('/tmp/pacm.conf', 'w') as fout:
+                for line in fin.readlines():
+                    if "#ParallelDownloads = 5" in line:
+                        fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 8"))
+                    else:
+                        fout.write(line)
 
         def pacman(mode):
 
