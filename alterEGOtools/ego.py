@@ -111,6 +111,7 @@ pkgs = {
         'ranger':                   'nice',
         'remmina':                  'nice',
         'rsync':                    'minimal',
+        'rustscan':                 'aur_cli_hack',
         'screen':                   'nice',
         'screenkey':                'full',
         #'sddm':                     'full',
@@ -130,7 +131,9 @@ pkgs = {
         'traceroute':               'full',
         'transmission-gtk':         'full',
         'tree':                     'nice',
-        'unzip':                    'nice',
+        'ufw':                      'minimal',
+        'unrar':                    'minimal',
+        'unzip':                    'minimal',
         'vim':                      'minimal',
         'virtualbox-guest-utils':   'nice',
         'w3m':                      'nice',
@@ -639,5 +642,14 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+## { NOTES }___________________________________________________________________
+
+    ## [ MODES ]
+    #### MINIMAL <- CLI / BASIC only
+    #### UNDERGROUND <- CLI / HACH
+    #### - pac_cli_hack
+    #### - aur_cli_hack
+    
 
 ## { FIN }_____________________________________________________________________
