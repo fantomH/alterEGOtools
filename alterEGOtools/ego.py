@@ -382,13 +382,17 @@ def main():
         ## [ PACSTRAP ]
 
         #### Enabling ParallelDownloads in pacman.conf
-        with open('/etc/pacman.conf', 'r') as fin:
-            with open('/tmp/pacm.conf', 'w') as fout:
+        pacman_conf = '/etc/pacman.conf'
+        pacman_conf_bkp = pacman_conf + '.bkp'
+        shutil.move(pacman_conf, pacman_conf_bkp)
+        with open(pacman_conf_bkp, 'r') as fin:
+            with open(pacman_config, 'w') as fout:
                 for line in fin.readlines():
                     if "#ParallelDownloads = 5" in line:
                         fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 8"))
                     else:
                         fout.write(line)
+        os.remove(pacman_conf_bkp)
 
         def pacstrap():
 
@@ -451,13 +455,17 @@ def main():
         ## [ PACMAN ]
 
         #### Enabling ParallelDownloads in pacman.conf
-        with open('/etc/pacman.conf', 'r') as fin:
-            with open('/tmp/pacm.conf', 'w') as fout:
+        pacman_conf = '/etc/pacman.conf'
+        pacman_conf_bkp = pacman_conf + '.bkp'
+        shutil.move(pacman_conf, pacman_conf_bkp)
+        with open(pacman_conf_bkp, 'r') as fin:
+            with open(pacman_config, 'w') as fout:
                 for line in fin.readlines():
                     if "#ParallelDownloads = 5" in line:
                         fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 8"))
                     else:
                         fout.write(line)
+        os.remove(pacman_conf_bkp)
 
         def pacman(mode):
 
