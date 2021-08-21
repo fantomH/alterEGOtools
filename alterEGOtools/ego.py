@@ -386,7 +386,7 @@ def main():
         pacman_conf_bkp = pacman_conf + '.bkp'
         shutil.move(pacman_conf, pacman_conf_bkp)
         with open(pacman_conf_bkp, 'r') as fin:
-            with open(pacman_config, 'w') as fout:
+            with open(pacman_conf, 'w') as fout:
                 for line in fin.readlines():
                     if "#ParallelDownloads = 5" in line:
                         fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 8"))
@@ -459,7 +459,7 @@ def main():
         pacman_conf_bkp = pacman_conf + '.bkp'
         shutil.move(pacman_conf, pacman_conf_bkp)
         with open(pacman_conf_bkp, 'r') as fin:
-            with open(pacman_config, 'w') as fout:
+            with open(pacman_conf, 'w') as fout:
                 for line in fin.readlines():
                     if "#ParallelDownloads = 5" in line:
                         fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 8"))
