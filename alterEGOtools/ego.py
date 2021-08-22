@@ -412,12 +412,12 @@ def main():
             run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
             Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
-        pacstrap()
+        pacstrap(mode)
 
         #### Temporary solution due to few failure.
         while True:
             if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-                pacstrap()
+                pacstrap(mode)
             else:
                 break
 
