@@ -35,6 +35,7 @@ user_passwd = 'password1'
 pkgs = {
         'alsa-utils':               'nice',
         'arp-scan':                 'full',
+        'base':                     'minimal',
         'base-devel':               'minimal',
         'bat':                      'nice',
         'bc':                       'nice',
@@ -111,7 +112,8 @@ pkgs = {
         'ranger':                   'nice',
         'remmina':                  'nice',
         'rsync':                    'minimal',
-        'rustscan':                 'aur_cli_hack',
+        #'rustscan':                 'aur_cli_hack',
+        'rustscan':                 'aur',
         'screen':                   'nice',
         'screenkey':                'full',
         #'sddm':                     'full',
@@ -273,7 +275,7 @@ _RESET = Msg.color('reset')
 
 def packages(required_by, mode=None):
 
-    if required_by == 'pacman':
+    if required_by == 'pacstrap':
         if mode == 'minimal':
             pkgs_list = [k for k, v in pkgs.items() if v in ['minimal']]
         elif mode == 'nice':
@@ -397,7 +399,7 @@ def main():
                         fout.write(line)
         os.remove(pacman_conf_bkp)
 
-        def pacstrap():
+        def pacstrap(mode):
 
             execute(f"rm -rf /var/lib/pacman/sync")
             execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
@@ -405,8 +407,9 @@ def main():
             execute(f"pacman -Syy")
 
             Msg.console(f":: {_green}Starting pacstrap...", wait=0)
-            Msg.console(f" -> {_blue}Will install:\nbase\npython", wait=0)
-            run_pacstrap = execute(f"pacstrap /mnt base python")
+            pkgs_list = ' '.join(packages('pacstrap', mode))
+            Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
+            run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
             Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
         pacstrap()
@@ -455,42 +458,42 @@ def main():
     if args.sysconfig:
         mode = args.sysconfig
 
-        ## [ PACMAN ]
+        # [ PACMAN ]
 
-        #### Enabling ParallelDownloads in pacman.conf
-        pacman_conf = '/etc/pacman.conf'
-        pacman_conf_bkp = pacman_conf + '.bkp'
-        shutil.move(pacman_conf, pacman_conf_bkp)
-        with open(pacman_conf_bkp, 'r') as fin:
-            with open(pacman_conf, 'w') as fout:
-                for line in fin.readlines():
-                    if "#ParallelDownloads = 5" in line:
-                        fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 8"))
-                    else:
-                        fout.write(line)
-        os.remove(pacman_conf_bkp)
+        ### Enabling ParallelDownloads in pacman.conf
+        # pacman_conf = '/etc/pacman.conf'
+        # pacman_conf_bkp = pacman_conf + '.bkp'
+        # shutil.move(pacman_conf, pacman_conf_bkp)
+        # with open(pacman_conf_bkp, 'r') as fin:
+            # with open(pacman_conf, 'w') as fout:
+                # for line in fin.readlines():
+                    # if "#ParallelDownloads = 5" in line:
+                        # fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 8"))
+                    # else:
+                        # fout.write(line)
+        # os.remove(pacman_conf_bkp)
 
-        def pacman(mode):
+        # def pacman(mode):
 
-            pkgs_list = ' '.join(packages('pacman', mode))
+            # pkgs_list = ' '.join(packages('pacman', mode))
 
-            #### Re-install archlinux-keyring in case of corruption.
-            execute(f"pacman -S --noconfirm archlinux-keyring")
-            execute(f"pacman -Syy")
+            ### Re-install archlinux-keyring in case of corruption.
+            # execute(f"pacman -S --noconfirm archlinux-keyring")
+            # execute(f"pacman -Syy")
 
-            Msg.console(f":: {_green}Starting pacman...", wait=0)
-            Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
-            run_pacman = execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
-            Msg.console(f" -> {_blue}Pacman exit code: {run_pacman.returncode}", wait=0)
+            # Msg.console(f":: {_green}Starting pacman...", wait=0)
+            # Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
+            # run_pacman = execute(f"pacman -Syu --noconfirm --needed {pkgs_list}")
+            # Msg.console(f" -> {_blue}Pacman exit code: {run_pacman.returncode}", wait=0)
 
-        pacman(mode)
+        # pacman(mode)
 
-        #### Temporary solution due to few failure.
-        while True:
-            if input(f":: {_green}Re-run pacman [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-                pacman(mode)
-            else:
-                break
+        ### Temporary solution due to few failure.
+        # while True:
+            # if input(f":: {_green}Re-run pacman [Y/n]? {_RESET}").lower() in ['y', 'yes']:
+                # pacman(mode)
+            # else:
+                # break
 
         ## [ GIT REPOSITORIES ]
 
