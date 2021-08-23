@@ -392,7 +392,7 @@ class Installer:
                         fout.write(line)
         os.remove(pacman_conf_bkp)
 
-    def pacstrap(self.mode):
+    def pacstrap(self):
 
         execute(f"rm -rf /var/lib/pacman/sync")
         execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
