@@ -349,7 +349,7 @@ def shared_wordlist():
 
 class Installer:
 
-    def __init__(self, mode='minimal'):
+    def __init__(self, mode):
         self.mode == mode
 
     def partition():
@@ -421,7 +421,8 @@ def main():
         mode = args.install
         Msg.console(f":: {_green}This will install AlterEGO Linux in {mode} mode...", wait=3)
 
-        installer = Installer(mode=mode)
+        print(mode)
+        installer = Installer(mode)
 
         installer.partition()
         installer.mount()
