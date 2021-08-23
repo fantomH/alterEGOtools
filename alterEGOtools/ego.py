@@ -405,6 +405,13 @@ class Installer:
         run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
         Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
+        #### Temporary solution due to few failure.
+        while run_pacstrap.returncode != 0:
+            if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
+                installer.pacstrap()
+            else:
+                break
+
     def fstab(self):
         Msg.console(f":: {_green}Generating the fstab...", wait=0)
         execute(f"genfstab -U /mnt >> /mnt/etc/fstab", shell=True)
@@ -414,11 +421,11 @@ class Installer:
         shutil.copy('/root/ego.py', '/mnt/root/ego.py')
 
         #### Moves to chroot to configure the new system.
-        if mode == 'minimal':
+        if self.mode == 'minimal':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
-        elif mode == 'nice':
+        elif self.mode == 'nice':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig nice')
-        elif mode == 'beast':
+        elif self.mode == 'beast':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
 def main():
@@ -445,12 +452,6 @@ def main():
         installer.mod_pacman_conf()
 
         installer.pacstrap()
-        #### Temporary solution due to few failure.
-        while True:
-            if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-                installer.pacstrap()
-            else:
-                break
 
         installer.fstab()
 
