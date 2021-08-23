@@ -349,7 +349,7 @@ def shared_wordlist():
 
 class Installer:
 
-    def self.__init__(mode):
+    def __init__(self, mode):
         self.mode == mode
 
     def partition():
