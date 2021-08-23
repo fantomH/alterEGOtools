@@ -378,7 +378,7 @@ class Installer:
         Msg.console(f":: {_green}Creating /home...", wait=0)
         os.mkdir('/mnt/home')
 
-    def mod_pacman_conf()
+    def mod_pacman_conf():
         #### Enabling ParallelDownloads in pacman.conf
         pacman_conf = '/etc/pacman.conf'
         pacman_conf_bkp = pacman_conf + '.bkp'
@@ -432,7 +432,7 @@ def main():
         #### Temporary solution due to few failure.
         while True:
             if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-                pacstrap()
+                installer.pacstrap()
             else:
                 break
 
