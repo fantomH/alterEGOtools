@@ -352,7 +352,7 @@ class Installer:
     def __init__(self, mode):
         self.mode = mode
 
-    def partition():
+    def partition(self):
         ## [ CREATE PARTITION ]
         Msg.console(f":: {_green}Creating and mounting the partition...", wait=0)
         partition = '''label: dos
@@ -369,7 +369,7 @@ class Installer:
         Msg.console(f":: {_green}Formating the file system...", wait=0)
         execute(f"mkfs.ext4 /dev/sda1")
 
-    def mount():
+    def mount(self):
         ## [ MOUNT /dev/sda1 TO /mnt ]
         Msg.console(f":: {_green}Mounting /dev/sda1 to /mnt...", wait=0)
         execute(f"mount /dev/sda1 /mnt")
@@ -378,7 +378,7 @@ class Installer:
         Msg.console(f":: {_green}Creating /home...", wait=0)
         os.mkdir('/mnt/home')
 
-    def mod_pacman_conf():
+    def mod_pacman_conf(self):
         #### Enabling ParallelDownloads in pacman.conf
         pacman_conf = '/etc/pacman.conf'
         pacman_conf_bkp = pacman_conf + '.bkp'
@@ -405,6 +405,22 @@ class Installer:
         run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
         Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
+    def fstab(self):
+        Msg.console(f":: {_green}Generating the fstab...", wait=0)
+        execute(f"genfstab -U /mnt >> /mnt/etc/fstab", shell=True)
+
+    def chroot(self):
+        Msg.console(f":: {_green}Preparing arch-root...", wait=2)
+        shutil.copy('/root/ego.py', '/mnt/root/ego.py')
+
+        #### Moves to chroot to configure the new system.
+        if mode == 'minimal':
+            execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
+        elif mode == 'nice':
+            execute(f'arch-chroot /mnt python /root/ego.py --sysconfig nice')
+        elif mode == 'beast':
+            execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -421,7 +437,6 @@ def main():
         mode = args.install
         Msg.console(f":: {_green}This will install AlterEGO Linux in {mode} mode...", wait=3)
 
-        print(mode)
         installer = Installer(mode)
 
         installer.partition()
@@ -437,30 +452,16 @@ def main():
             else:
                 break
 
-        # [ FSTAB ]
+        installer.fstab()
 
-        Msg.console(f":: {_green}Generating the fstab...", wait=0)
-        execute(f"genfstab -U /mnt >> /mnt/etc/fstab", shell=True)
-
-        # [ ARCH-CHROOT ]
-
-        Msg.console(f":: {_green}Preparing arch-root...", wait=2)
-        shutil.copy('/root/ego.py', '/mnt/root/ego.py')
-
-        #### Moves to chroot to configure the new system.
-        if mode == 'minimal':
-            execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
-        elif mode == 'nice':
-            execute(f'arch-chroot /mnt python /root/ego.py --sysconfig nice')
-        elif mode == 'beast':
-            execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
+        installer.chroot()
 
         # [ ALL DONE ]
 
         #### Returns from chroot.
         all_done = input(f":: {_green}Shutdown [Y/n]? ")
         if all_done.lower() in ['y', 'yes']:
-            Msg.console(f" -> {_blue}Good Bye!", wait=10)
+            Msg.console(f" -> {_blue}Good Bye!", wait=1)
             try:
                 execute(f'umount -R /mnt')
                 execute(f'shutdown now') 
