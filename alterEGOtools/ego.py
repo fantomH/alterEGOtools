@@ -4,7 +4,7 @@
 ##
 ## ego.py
 ##   created        : 2021-06-05 00:03:38 UTC
-##   updated        : 2021-08-20 23:46:20 UTC
+##   updated        : 2021-08-23 19:28:44 UTC
 ##   description    : Deploy and update alterEGO Linux.
 ## ____________________________________________________________________________
 
@@ -428,6 +428,13 @@ class Installer:
         elif self.mode == 'beast':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
+    def set_time(self):
+        Msg.console(f":: {_green}Setting clock and timezone...", wait=0)
+
+        os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
+        execute(f'timedatectl set-ntp true')
+        execute(f'hwclock --systohc --utc')
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -475,6 +482,7 @@ def main():
 
     if args.sysconfig:
         mode = args.sysconfig
+        installer = Installer(mode)
 
         # [ PACMAN ]
 
@@ -526,11 +534,7 @@ def main():
 
         ## [ TIMEZONE & CLOCK ]
 
-        Msg.console(f":: {_green}Setting clock and timezone...", wait=0)
-
-        os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
-        execute(f'timedatectl set-ntp true')
-        execute(f'hwclock --systohc --utc')
+        installer.set_time()
 
         ## [ LOCALE ]
 
