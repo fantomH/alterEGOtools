@@ -347,23 +347,13 @@ def shared_wordlist():
 
 ## { INSTALLER }_______________________________________________________________
 
-def main():
+class Installer:
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--install", type=str, choices=['minimal', 'nice', 'beast'], help="Install AlterEGO Linux.")
-    parser.add_argument("--sysconfig", type=str, choices=['minimal', 'nice', 'beast'], help="Initiate the system configuration after the Installer.")
-    parser.add_argument("--rerun", type=str, help="Until I figure out things...")
+    def self.__init__(mode):
+        self.mode == mode
 
-    args = parser.parse_args()
-
-    ## { PARTITION SET UP }____________________________________________________
-
-    if args.install:
-        mode = args.install
-        Msg.console(f":: {_green}This will install AlterEGO Linux in {mode} mode...", wait=3)
-
-        ## [ PARTITION ]
-
+    def partition():
+        ## [ CREATE PARTITION ]
         Msg.console(f":: {_green}Creating and mounting the partition...", wait=0)
         partition = '''label: dos
                     device: /dev/sda
@@ -375,17 +365,20 @@ def main():
 
         execute(f"sfdisk /dev/sda", input=partition)
 
-        #### Formating the File System.
+        ## [ FORMAT FILE SYSTEM ]
+        Msg.console(f":: {_green}Formating the file system...", wait=0)
         execute(f"mkfs.ext4 /dev/sda1")
 
-        #### Mounting /dev/sda1 to /mnt.
+    def mount():
+        ## [ MOUNT /dev/sda1 TO /mnt ]
+        Msg.console(f":: {_green}Mounting /dev/sda1 to /mnt...", wait=0)
         execute(f"mount /dev/sda1 /mnt")
 
-        #### Creating ${HOME}. 
+        ## [ CREATE ${HOME} ]
+        Msg.console(f":: {_green}Creating /home...", wait=0)
         os.mkdir('/mnt/home')
 
-        ## [ PACSTRAP ]
-
+    def mod_pacman_conf()
         #### Enabling ParallelDownloads in pacman.conf
         pacman_conf = '/etc/pacman.conf'
         pacman_conf_bkp = pacman_conf + '.bkp'
@@ -394,30 +387,52 @@ def main():
             with open(pacman_conf, 'w') as fout:
                 for line in fin.readlines():
                     if "#ParallelDownloads = 5" in line:
-                        fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 8"))
+                        fout.write(line.replace("#ParallelDownloads = 5", "ParallelDownloads = 5"))
                     else:
                         fout.write(line)
         os.remove(pacman_conf_bkp)
 
-        def pacstrap(mode):
+    def pacstrap(self.mode):
 
-            execute(f"rm -rf /var/lib/pacman/sync")
-            execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
-            execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
-            execute(f"pacman -Syy")
+        execute(f"rm -rf /var/lib/pacman/sync")
+        execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
+        execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
+        execute(f"pacman -Syy --noconfirm archlinux-keyring")
 
-            Msg.console(f":: {_green}Starting pacstrap...", wait=0)
-            pkgs_list = ' '.join(packages('pacstrap', mode))
-            Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
-            run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
-            Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
+        Msg.console(f":: {_green}Starting pacstrap...", wait=0)
+        pkgs_list = ' '.join(packages('pacstrap', self.mode))
+        Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
+        run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
+        Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
-        pacstrap(mode)
+def main():
 
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--install", type=str, choices=['minimal', 'nice', 'beast'], help="Install AlterEGO Linux.")
+    parser.add_argument("--post-mount", type=str, choices=['minimal', 'nice', 'beast'], help="Run on /mnt.")
+    parser.add_argument("--sysconfig", type=str, choices=['minimal', 'nice', 'beast'], help="Initiate the system configuration after the Installer.")
+    parser.add_argument("--rerun", type=str, help="Until I figure out things...")
+
+    args = parser.parse_args()
+
+    ## { PARTITION SET UP }____________________________________________________
+
+    if args.install:
+        mode = args.install
+        Msg.console(f":: {_green}This will install AlterEGO Linux in {mode} mode...", wait=3)
+
+        installer = Installer(mode)
+
+        installer.partition()
+        installer.mount()
+
+        installer.mod_pacman_conf()
+
+        installer.pacstrap()
         #### Temporary solution due to few failure.
         while True:
             if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-                pacstrap(mode)
+                pacstrap()
             else:
                 break
 
