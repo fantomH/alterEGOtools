@@ -156,6 +156,11 @@ pkgs = {
         'zbar':                     'full',
         }
 
+GitOption = namedtuple('GitOption', ['name', 'remote', 'local', 'mode'])
+git_repositories = [
+
+                    ]
+
 ## { UTIL FUNCTIONS }__________________________________________________________
 
 def is_virtual_machine():
