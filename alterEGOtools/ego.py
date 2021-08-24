@@ -158,8 +158,9 @@ pkgs = {
 
 GitOption = namedtuple('GitOption', ['name', 'remote', 'local', 'mode'])
 git_repositories = [
-
-                    ]
+    GitOption('alterEGOtools', 'https://github.com/fantomH/alterEGOtools.git', '/usr/local/alterEGOtools', ['minimal']),
+    GitOption('alterEGO', 'https://github.com/fantomH/alterEGO.git', '/usr/local/alterEGO', ['minimal']),
+                        ]
 
 ## { UTIL FUNCTIONS }__________________________________________________________
 
@@ -209,13 +210,6 @@ def execute(cmd, cwd=None, shell=False, text=True, input=None):
 
     CommandResults = namedtuple('CommandResults', ['returncode'])
     return CommandResults(cmd_run.returncode)
-
-def git(git_repository, local_directory):
-
-    if not os.path.isdir(local_directory):
-        execute(f"git clone {git_repository} {local_directory}")
-    else:
-        execute(f"git -C {local_directory} pull")
 
 class Msg:
 
@@ -433,6 +427,18 @@ class Installer:
         elif self.mode == 'beast':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
+    def pull_git(self):
+
+        Msg.console(f":: {_green}Fetching AlterEGO tools, config and other stuff...", wait=0)
+
+        for g in git_repositories:
+            if mode in g.mode:
+                Msg.console(f" -> {_blue}Pulling {g.remote}.", wait=0)
+                if not os.path.isdir(g.local):
+                    execute(f"git clone {g.remote} {g.local}")
+                else:
+                    execute(f"git -C {g.local} pull")
+
     def set_time(self):
         Msg.console(f":: {_green}Setting clock and timezone...", wait=0)
 
@@ -528,14 +534,7 @@ def main():
 
         ## [ GIT REPOSITORIES ]
 
-        Msg.console(f":: {_green}Fetching AlterEGO tools, config and other stuff...", wait=0)
-
-        Msg.console(f" -> {_blue}Pulling {gitTOOLS}.", wait=0)
-        git(gitTOOLS, localTOOLS)
-
-        if mode == 'beast' or mode == 'nice':
-            Msg.console(f" -> {_blue}Pulling {gitEGO}.", wait=0)
-            git(gitEGO, localEGO)
+        installer.pull_git()
 
         ## [ TIMEZONE & CLOCK ]
 
