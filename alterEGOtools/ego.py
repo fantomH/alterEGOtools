@@ -33,133 +33,132 @@ user = 'ghost'
 user_passwd = 'password1'
 
 pkgs = {
-        'alsa-utils':               'nice',
-        'arp-scan':                 'full',
+        'alsa-utils':               'niceguy',
+        'arp-scan':                 'hack-cli',
         'base':                     'minimal',
         'base-devel':               'minimal',
-        'bat':                      'nice',
-        'bc':                       'nice',
-        'bind':                     'nice',
+        'bat':                      'niceguy',
+        'bc':                       'niceguy',
+        'bind':                     'niceguy',
         'binwalk':                  'full',
-        'bleachbit':                'nice',
-        'brave-bin':                'aur',
-        'burpsuite':                'aur',
+        'bleachbit':                'niceguy',
+        'brave-bin':                'aur-gui',
+        'burpsuite':                'aur-hack-gui',
         'cmatrix':                  'full',
-        'code':                     'nice',
-        'cronie':                   'nice',
-        'dirbuster':                'aur',
-        'dos2unix':                 'nice',
-        'entr':                     'nice',
-        'exfat-utils':              'nice',
-        'feh':                      'nice',
-        'ffmpeg':                   'nice',
-        'firefox':                  'nice',
-        'freerdp':                  'nice',
+        'code':                     'niceguy',
+        'cronie':                   'niceguy',
+        'dirbuster':                'aur-hack-gui',
+        'dos2unix':                 'niceguy',
+        'entr':                     'niceguy',
+        'exfat-utils':              'niceguy',
+        'feh':                      'niceguy',
+        'ffmpeg':                   'niceguy',
+        'firefox':                  'niceguy',
+        'freerdp':                  'niceguy',
         'fzf':                      'minimal',
-        'gimp':                     'nice',
+        'gimp':                     'niceguy',
         'git':                      'minimal',
-        'gnu-netcat':               'nice',
-        'go':                       'nice',
-        'gobuster-git':             'aur',
-        'gromit-mpx-git':           'aur',
+        'gnu-netcat':               'niceguy',
+        'go':                       'niceguy',
+        'gobuster-git':             'aur-hack-cli',
+        'gromit-mpx-git':           'aur-gui',
         'grub':                     'minimal',
-        'htop':                     'nice',
-        'i3-gaps':                  'nice',
-        'imagemagick':              'nice',
-        'inkscape':                 'nice',
-        'inxi':                     'aur',
+        'htop':                     'niceguy',
+        'i3-gaps':                  'niceguy',
+        'imagemagick':              'niceguy',
+        'inkscape':                 'niceguy',
+        'inxi':                     'aur-minimal',
         'john':                     'full',
-        'jq':                       'nice',
+        'jq':                       'niceguy',
         'jre11-openjdk':            'full',
-        'libreoffice-fresh':        'nice',
-        'librespeed-cli-bin':       'aur',
+        'libreoffice-fresh':        'niceguy',
+        'librespeed-cli-bin':       'aur-cli',
         'linux':                    'minimal',
         'lynx':                     'minimal',
         'man-db':                   'minimal',
         'man-pages':                'minimal',
         'mariadb-clients':          'full',
         'metasploit':               'full',
-        'mlocate':                  'nice',
-        'mtools':                   'nice',
+        'mlocate':                  'niceguy',
+        'mtools':                   'niceguy',
         'mtr':                      'full',
         'net-tools':                'full',
         'networkmanager':           'minimal',
-        'nfs-utils':                'nice',
+        'nfs-utils':                'niceguy',
         'nikto':                    'full',
         'nmap':                     'full',
-        'notify-osd':               'nice',
-        'ntfs-3g':                  'nice',
+        'notify-osd':               'niceguy',
+        'ntfs-3g':                  'niceguy',
         'openssh':                  'minimal',
         'openvpn':                  'minimal',
         'p7zip':                    'full',
-        'pandoc-bin':               'aur',
-        'pavucontrol':              'nice',
+        'pandoc-bin':               'aur-cli',
+        'pavucontrol':              'niceguy',
         'perl-image-exiftool':      'full',
         'php':                      'full',
-        'polkit-gnome':             'nice',
+        'polkit-gnome':             'niceguy',
         'postgresql':               'full',
-        'powershell-bin':           'aur',
-        'pptpclient':               'nice',
-        'pulseaudio':               'nice',
+        'powershell-bin':           'aur-cli',
+        'pptpclient':               'niceguy',
+        'pulseaudio':               'niceguy',
         'pv':                       'full',
         'python-beautifulsoup4':    'full',
         'python-pandas':            'full',
-        'python-pip':               'nice',
+        'python-pip':               'niceguy',
         'python-pyaml':             'full',
         'python-rich':              'full',
         'qrencode':                 'full',
-        'qtile':                    'nice',
-        'ranger':                   'nice',
-        'remmina':                  'nice',
+        'qtile':                    'niceguy',
+        'ranger':                   'niceguy',
+        'remmina':                  'niceguy',
         'rsync':                    'minimal',
-        #'rustscan':                 'aur_cli_hack',
-        'rustscan':                 'aur',
-        'screen':                   'nice',
+        'rustscan':                 'aur-hack-cli',
+        'screen':                   'niceguy',
         'screenkey':                'full',
         #'sddm':                     'full',
-        'shellcheck':               'nice',
-        'simple-mtpfs':             'aur',
+        'shellcheck':               'niceguy',
+        'simple-mtpfs':             'aur-cli',
         'sqlitebrowser':            'full',
-        'sxiv':                     'nice',
+        'sxiv':                     'niceguy',
         'tcpdump':                  'full',
         'tesseract':                'full',
         'tesseract-data-eng':       'full',
         'tesseract-data-fra':       'full',
-        'thunar':                   'nice',
-        'thunar-volman':            'nice',
+        'thunar':                   'niceguy',
+        'thunar-volman':            'niceguy',
         'tidy':                     'full',
         'tk':                       'full',
         'tmux':                     'minimal',
         'traceroute':               'full',
         'transmission-gtk':         'full',
-        'tree':                     'nice',
+        'tree':                     'niceguy',
         'ufw':                      'minimal',
         'unrar':                    'minimal',
         'unzip':                    'minimal',
         'vim':                      'minimal',
-        'virtualbox-guest-utils':   'nice',
-        'w3m':                      'nice',
-        'wfuzz-git':                'aur',
+        'virtualbox-guest-utils':   'niceguy',
+        'w3m':                      'niceguy',
+        'wfuzz-git':                'aur-hack-cli',
         'wget':                     'minimal',
         'whois':                    'full',
         'wireshark-qt':             'full',
-        'xclip':                    'nice',
-        'xcompmgr':                 'nice',
-        'xdotool':                  'nice',
-        'xfce4-terminal':           'nice',
-        'xorg-server':              'nice',
-        'xorg-xinit':               'nice',
-        'xterm':                    'nice',
-        'youtube-dl':               'nice',
-        'zathura':                  'nice',
-        'zathura-pdf-mupdf':        'nice',
+        'xclip':                    'niceguy',
+        'xcompmgr':                 'niceguy',
+        'xdotool':                  'niceguy',
+        'xfce4-terminal':           'niceguy',
+        'xorg-server':              'niceguy',
+        'xorg-xinit':               'niceguy',
+        'xterm':                    'niceguy',
+        'youtube-dl':               'niceguy',
+        'zathura':                  'niceguy',
+        'zathura-pdf-mupdf':        'niceguy',
         'zbar':                     'full',
         }
 
 GitOption = namedtuple('GitOption', ['name', 'remote', 'local', 'mode'])
 git_repositories = [
-    GitOption('alterEGOtools', 'https://github.com/fantomH/alterEGOtools.git', '/usr/local/alterEGOtools', ['minimal', 'nice', 'beast']),
-    GitOption('alterEGO', 'https://github.com/fantomH/alterEGO.git', '/usr/local/alterEGO', ['minimal', 'nice', 'beast']),
+    GitOption('alterEGOtools', 'https://github.com/fantomH/alterEGOtools.git', '/usr/local/alterEGOtools', ['minimal', 'niceguy', 'beast']),
+    GitOption('alterEGO', 'https://github.com/fantomH/alterEGO.git', '/usr/local/alterEGO', ['minimal', 'niceguy', 'beast']),
                         ]
 
 ## { UTIL FUNCTIONS }__________________________________________________________
@@ -277,12 +276,17 @@ def packages(required_by, mode=None):
     if required_by == 'pacstrap':
         if mode == 'minimal':
             pkgs_list = [k for k, v in pkgs.items() if v in ['minimal']]
-        elif mode == 'nice':
-            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'nice']]
+        elif mode == 'niceguy':
+            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'niceguy', 'cli', 'gui']]
         elif mode == 'beast':
-            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'nice', 'full']]
+            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'niceguy', 'cli', 'gui', 'hack-cli', 'hack-gui' 'full']]
     elif required_by == 'yay':
-            pkgs_list = [k for k, v in pkgs.items() if v in ['aur']]
+        if mode == 'minimal':
+            pkgs_list = [k for k, v in pkgs.items() if v in ['aur-minimal']]
+        elif mode == 'niceguy':
+            pkgs_list = [k for k, v in pkgs.items() if v in ['aur-minimal', 'aur-cli', 'aur-gui']]
+        elif mode == 'beast':
+            pkgs_list = [k for k, v in pkgs.items() if v in ['aur-minimal', 'aur-cli', 'aur-gui', 'aur-hack-cli', 'aur-hack-gui']]
 
     return pkgs_list
 
@@ -336,7 +340,7 @@ def shared_wordlist():
     localEGO_wordlist = f"{localEGO}/share/wordlist"
     files = os.listdir(localEGO_wordlist)
 
-    Msg.console(f":: {_green}Deploying application to /usr/local/share/wordlist...", wait=0)
+    Msg.console(f":: {_green}Deploying wordlist to /usr/local/share/wordlist...", wait=0)
     for f in files:
         Msg.console(f" -> {_blue}{f}", wait=0)
         src = os.path.join(localEGO_wordlist, f)
@@ -421,8 +425,8 @@ class Installer:
         #### Moves to chroot to configure the new system.
         if self.mode == 'minimal':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig minimal')
-        elif self.mode == 'nice':
-            execute(f'arch-chroot /mnt python /root/ego.py --sysconfig nice')
+        elif self.mode == 'niceguy':
+            execute(f'arch-chroot /mnt python /root/ego.py --sysconfig niceguy')
         elif self.mode == 'beast':
             execute(f'arch-chroot /mnt python /root/ego.py --sysconfig beast')
 
@@ -470,7 +474,7 @@ class Installer:
         execute(f'systemctl enable NetworkManager.service')
 
     def skel(self):
-        if self.mode == 'beast' or self.mode == 'nice':
+        if self.mode == 'beast' or self.mode == 'niceguy':
             Msg.console(f":: {_green}Populating /etc/skel...", wait=0)
             src = f"{localEGO}/config/"
             dst = f"/etc/skel/"
@@ -481,7 +485,7 @@ class Installer:
         Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
         execute(f"passwd", input=f'{root_passwd}\n{root_passwd}\n')
 
-        if self.mode == 'beast' or self.mode == 'nice':
+        if self.mode == 'beast' or self.mode == 'niceguy':
             Msg.console(f" -> {_blue}Creating user {user}", wait=0)
             execute(f"useradd -m -g users -G wheel {user}") 
             Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
@@ -490,12 +494,70 @@ class Installer:
             Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
             execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
 
+    def shared_resources(self):
+        if self.mode == 'beast':
+            Msg.console(f":: {_green}Deploying shared resources...", wait=0)
+            shared_resources()
+            shared_bin()
+            shared_wordlist()
+            shared_reverse_shell()
+            # -- assets
+            copy_recursive(os.path.join(localEGO, 'share', 'assets'), os.path.join(usr_local, 'share', 'assets'))
+            # -- backgrounds
+            copy_recursive(os.path.join(localEGO, 'share', 'backgrounds'), os.path.join(usr_local, 'share', 'backgrounds'))
+
+    def swapfile(self):
+        Msg.console(f"{_green}Creating a 1G swapfile...", wait=0)
+
+        execute(f"fallocate -l 1G /swapfile")
+        os.chmod('/swapfile', 0o600)
+        execute(f"mkswap /swapfile")
+        execute(f"swapon /swapfile")
+
+        with open('/etc/fstab', 'a') as swap_file:
+            swap_file.write("/swapfile none swap defaults 0 0")
+
+    def aur(self):
+        Msg.console(f":: {_green}Installing YAY...", wait=0)
+        execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
+        execute(f"chown -R {user}:users /opt/yay")
+        execute(f"su {user} -c 'makepkg -si --needed --noconfirm'", cwd='/opt/yay')
+
+        Msg.console(f":: {_green}Installing AUR packages...", wait=0)
+        pkgs_list = ' '.join(packages('yay', mode=self.mode))
+        Msg.console(f" -> {_blue}Will be installed:\n{pkgs_list}", wait=0)
+        execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
+
+    def mandb(self):
+        Msg.console(f":: {_green}Generating mandb...", wait=0)
+        execute(f"mandb")
+
+    def set_java(self):
+        #### Burpsuite not running with java 16.
+        #### Will need to install jre11-openjdk.
+        #### $ sudo archlinux-java set java-11-openjdk
+
+        if self.mode == 'beast':
+            Msg.console(f":: {_green}Fixing Java...", wait=0)
+            execute(f"archlinux-java set java-11-openjdk")
+
+    def bootloader(self):
+        Msg.console(f":: {_green}Installing and configuring the bootloader...", wait=0)
+        execute(f'grub-install /dev/sda')
+        execute(f'grub-mkconfig -o /boot/grub/grub.cfg')
+
+    def vbox_services(self):
+        if self.mode == 'beast' or self.mode == 'niceguy':
+            Msg.console(f":: {_green}Starting vbox service...", wait=0)
+            execute(f'systemctl start vboxservice.service')
+            execute(f'systemctl enable vboxservice.service')
+
 def main():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--install", type=str, choices=['minimal', 'nice', 'beast'], help="Install AlterEGO Linux.")
-    parser.add_argument("--post-mount", type=str, choices=['minimal', 'nice', 'beast'], help="Run on /mnt.")
-    parser.add_argument("--sysconfig", type=str, choices=['minimal', 'nice', 'beast'], help="Initiate the system configuration after the Installer.")
+    parser.add_argument("--install", type=str, choices=['minimal', 'niceguy', 'beast'], help="Install AlterEGO Linux.")
+    parser.add_argument("--post-mount", type=str, choices=['minimal', 'niceguy', 'beast'], help="Run on /mnt.")
+    parser.add_argument("--sysconfig", type=str, choices=['minimal', 'niceguy', 'beast'], help="Initiate the system configuration after the Installer.")
     parser.add_argument("--rerun", type=str, help="Until I figure out things...")
 
     args = parser.parse_args()
@@ -510,13 +572,9 @@ def main():
 
         installer.partition()
         installer.mount()
-
         installer.mod_pacman_conf()
-
         installer.pacstrap()
-
         installer.fstab()
-
         installer.chroot()
 
         # [ ALL DONE ]
@@ -579,66 +637,23 @@ def main():
                 # break
 
         ## [ GIT REPOSITORIES ]
-
         installer.pull_git()
-
         ## [ TIMEZONE & CLOCK ]
-
         installer.set_time()
-
         ## [ LOCALE ]
-
         installer.set_locale()
-
         ## [ NETWORK CONFIGURATION ]
-
         installer.set_network()
-
         ## [ POPULATING /etc/skel ]
-
         installer.skel()
-
         ## [ USERS and PASSWORDS ]
-
         installer.users()
-
         ## [ SHARED RESOURCES ]
-
-        if mode == 'beast':
-            Msg.console(f":: {_green}Deploying shared resources...", wait=0)
-            shared_resources()
-            shared_bin()
-            shared_wordlist()
-            shared_reverse_shell()
-            # -- assets
-            copy_recursive(os.path.join(localEGO, 'share', 'assets'), os.path.join(usr_local, 'share', 'assets'))
-            # -- backgrounds
-            copy_recursive(os.path.join(localEGO, 'share', 'backgrounds'), os.path.join(usr_local, 'share', 'backgrounds'))
-
+        installer.shared_resources()
         ## [ SWAPFILE ]
-
-        Msg.console(f"{_green}Creating a 1G swapfile...", wait=0)
-
-        execute(f"fallocate -l 1G /swapfile")
-        os.chmod('/swapfile', 0o600)
-        execute(f"mkswap /swapfile")
-        execute(f"swapon /swapfile")
-
-        with open('/etc/fstab', 'a') as swap_file:
-            swap_file.write("/swapfile none swap defaults 0 0")
-
+        installer.swapfile()
         ## [ YAY ]
-
-        if mode == 'beast' or mode == 'nice':
-            Msg.console(f":: {_green}Installing YAY...", wait=0)
-            execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
-            execute(f"chown -R {user}:users /opt/yay")
-            execute(f"su {user} -c 'makepkg -si --needed --noconfirm'", cwd='/opt/yay')
-
-            Msg.console(f":: {_green}Installing AUR packages...", wait=0)
-            pkgs_list = ' '.join(packages('yay'))
-            Msg.console(f" -> {_blue}Will be installed:\n{pkgs_list}", wait=0)
-            execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
+        installer.aur()
 
         ## [ SDDM ]
 
@@ -650,32 +665,13 @@ def main():
             # execute(f'systemctl enable sddm.service')
 
         ## [ GENERATING mandb ]
-
-        Msg.console(f":: {_green}Generating mandb...", wait=0)
-        execute(f"mandb")
-
+        installer.mandb()
         ## [ SETTING JAVA DEFAULT ]
-
-        #### Burpsuite not running with java 16.
-        #### Will need to install jre11-openjdk.
-        #### $ sudo archlinux-java set java-11-openjdk
-
-        if mode == 'beast':
-            Msg.console(f":: {_green}Fixing Java...", wait=0)
-            execute(f"archlinux-java set java-11-openjdk")
-
+        installer.set_java()
         ## [ BOOTLOADER ]
-
-        Msg.console(f":: {_green}Installing and configuring the bootloader...", wait=0)
-        execute(f'grub-install /dev/sda')
-        execute(f'grub-mkconfig -o /boot/grub/grub.cfg')
-
+        installer.bootloader()
         ## [ VIRTUALBOX SERVICES ]
-
-        if mode == 'beast' or mode == 'nice':
-            Msg.console(f":: {_green}Starting vbox service...", wait=0)
-            execute(f'systemctl start vboxservice.service')
-            execute(f'systemctl enable vboxservice.service')
+        installer.vbox_services()
 
     ## { TESTING }_____________________________________________________________
 
@@ -692,6 +688,5 @@ if __name__ == '__main__':
     #### UNDERGROUND <- CLI / HACH
     #### - pac_cli_hack
     #### - aur_cli_hack
-    
 
 ## { FIN }_____________________________________________________________________
