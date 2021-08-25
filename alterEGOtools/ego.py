@@ -158,8 +158,8 @@ pkgs = {
 
 GitOption = namedtuple('GitOption', ['name', 'remote', 'local', 'mode'])
 git_repositories = [
-    GitOption('alterEGOtools', 'https://github.com/fantomH/alterEGOtools.git', '/usr/local/alterEGOtools', ['minimal']),
-    GitOption('alterEGO', 'https://github.com/fantomH/alterEGO.git', '/usr/local/alterEGO', ['minimal']),
+    GitOption('alterEGOtools', 'https://github.com/fantomH/alterEGOtools.git', '/usr/local/alterEGOtools', ['minimal', 'nice', 'beast']),
+    GitOption('alterEGO', 'https://github.com/fantomH/alterEGO.git', '/usr/local/alterEGO', ['minimal', 'nice', 'beast']),
                         ]
 
 ## { UTIL FUNCTIONS }__________________________________________________________
@@ -343,7 +343,6 @@ def shared_wordlist():
         dst = os.path.join('/usr/local/share/wordlist', f)
         os.symlink(src, dst)
 
-
 ## { INSTALLER }_______________________________________________________________
 
 class Installer:
@@ -432,7 +431,7 @@ class Installer:
         Msg.console(f":: {_green}Fetching AlterEGO tools, config and other stuff...", wait=0)
 
         for g in git_repositories:
-            if mode in g.mode:
+            if self.mode in g.mode:
                 Msg.console(f" -> {_blue}Pulling {g.remote}.", wait=0)
                 if not os.path.isdir(g.local):
                     execute(f"git clone {g.remote} {g.local}")
@@ -445,6 +444,15 @@ class Installer:
         os.symlink(f'/usr/share/zoneinfo/{timezone}', '/etc/localtime')
         execute(f'timedatectl set-ntp true')
         execute(f'hwclock --systohc --utc')
+
+    def set_locale(self):
+        Msg.console(f":: {_green}Generating locale...", wait=0)
+
+        execute(f'sed -i "s/#en_US.UTF-8/en_US.UTF-8/" /etc/locale.gen')
+        with open('/etc/locale.conf', 'w') as locale_conf:
+            locale_conf.write('LANG=en_US.UTF-8')
+        os.putenv('LANG', 'en_US.UTF-8')
+        execute(f'locale-gen')
 
 def main():
 
@@ -542,13 +550,7 @@ def main():
 
         ## [ LOCALE ]
 
-        Msg.console(f":: {_green}Generating locale...", wait=0)
-
-        execute(f'sed -i "s/#en_US.UTF-8/en_US.UTF-8/" /etc/locale.gen')
-        with open('/etc/locale.conf', 'w') as locale_conf:
-            locale_conf.write('LANG=en_US.UTF-8')
-        os.putenv('LANG', 'en_US.UTF-8')
-        execute(f'locale-gen')
+        installer.set_locale()
 
         ## [ NETWORK CONFIGURATION ]
 
