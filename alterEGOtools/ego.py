@@ -454,6 +454,42 @@ class Installer:
         os.putenv('LANG', 'en_US.UTF-8')
         execute(f'locale-gen')
 
+    def set_network(self):
+        Msg.console(f":: {_green}Setting up network...", wait=0)
+
+        with open('/etc/hostname', 'w') as etc_hostname:
+            etc_hostname.write(hostname)
+        with open('/etc/hosts', 'w') as etc_hosts:
+            etc_hosts.write(f'''
+                            127.0.0.1	localhost
+                            ::1		localhost
+                            127.0.1.1	{hostname}.localdomain	{hostname}
+                            ''')
+
+        Msg.console(f" -> {_blue}Enabling NetworkManager daemon...", wait=0)
+        execute(f'systemctl enable NetworkManager.service')
+
+    def skel(self):
+        if self.mode == 'beast' or self.mode == 'nice':
+            Msg.console(f":: {_green}Populating /etc/skel...", wait=0)
+            src = f"{localEGO}/config/"
+            dst = f"/etc/skel/"
+            copy_recursive(src, dst)
+
+    def users(self):
+        Msg.console(f":: {_green}Configuring users and passwords...", wait=0)
+        Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
+        execute(f"passwd", input=f'{root_passwd}\n{root_passwd}\n')
+
+        if self.mode == 'beast' or self.mode == 'nice':
+            Msg.console(f" -> {_blue}Creating user {user}", wait=0)
+            execute(f"useradd -m -g users -G wheel {user}") 
+            Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
+            execute(f"passwd {user}", input=f"{user_passwd}\n{user_passwd}\n")
+
+            Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
+            execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -487,6 +523,8 @@ def main():
 
         #### Returns from chroot.
         all_done = input(f":: {_green}Shutdown [Y/n]? ")
+        print(all_done)
+        print(all_done.lower())
         if all_done.lower() in ['y', 'yes']:
             Msg.console(f" -> {_blue}Good Bye!", wait=1)
             try:
@@ -554,42 +592,15 @@ def main():
 
         ## [ NETWORK CONFIGURATION ]
 
-        Msg.console(f":: {_green}Setting up network...", wait=0)
-
-        with open('/etc/hostname', 'w') as etc_hostname:
-            etc_hostname.write(hostname)
-        with open('/etc/hosts', 'w') as etc_hosts:
-            etc_hosts.write(f'''
-                            127.0.0.1	localhost
-                            ::1		localhost
-                            127.0.1.1	{hostname}.localdomain	{hostname}
-                            ''')
-
-        Msg.console(f" -> {_blue}Enabling NetworkManager daemon...", wait=0)
-        execute(f'systemctl enable NetworkManager.service')
+        installer.set_network()
 
         ## [ POPULATING /etc/skel ]
 
-        if mode == 'beast' or mode == 'nice':
-            Msg.console(f":: {_green}Populating /etc/skel...", wait=0)
-            src = f"{localEGO}/config/"
-            dst = f"/etc/skel/"
-            copy_recursive(src, dst)
+        installer.skel()
 
         ## [ USERS and PASSWORDS ]
 
-        Msg.console(f":: {_green}Configuring users and passwords...", wait=0)
-        Msg.console(f" -> {_blue}Setting password for root user.", wait=0)
-        execute(f"passwd", input=f'{root_passwd}\n{root_passwd}\n')
-
-        if mode == 'beast' or mode == 'nice':
-            Msg.console(f" -> {_blue}Creating user {user}", wait=0)
-            execute(f"useradd -m -g users -G wheel {user}") 
-            Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
-            execute(f"passwd {user}", input=f"{user_passwd}\n{user_passwd}\n")
-
-            Msg.console(f" -> {_blue}Enabling sudoers for {user}", wait=0)
-            execute(f'sed -i "s/# %wheel ALL=(ALL) NOPASSWD: ALL/%wheel ALL=(ALL) NOPASSWD: ALL/" /etc/sudoers')
+        installer.users()
 
         ## [ SHARED RESOURCES ]
 
