@@ -400,22 +400,14 @@ class Installer:
         execute(f"sed -i -e '/mirror.0xem.ma/d' /etc/pacman.d/mirrorlist")
         execute(f"pacman -Syy --noconfirm archlinux-keyring")
 
-        with open('/etc/pacman.d/mirrorlist', 'r') as fIN:
-            print(fIN.read())
-        Msg.console(f":: {_green}TEST...", wait=20)
-
         Msg.console(f":: {_green}Starting pacstrap...", wait=0)
         pkgs_list = ' '.join(packages('pacstrap', self.mode))
         Msg.console(f" -> {_blue}Will install:\n{pkgs_list}", wait=0)
         run_pacstrap = execute(f"pacstrap /mnt {pkgs_list}")
         Msg.console(f" -> {_blue}Pacstrap exit code: {run_pacstrap.returncode}", wait=0)
 
-        #### Temporary solution due to few failure.
-        while run_pacstrap.returncode != 0:
-            if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-                installer.pacstrap(self)
-            else:
-                break
+        return run_pacstrap.returncode
+
 
     def fstab(self):
         Msg.console(f":: {_green}Generating the fstab...", wait=0)
@@ -577,7 +569,14 @@ def main():
         installer.partition()
         installer.mount()
         installer.mod_pacman_conf()
-        installer.pacstrap()
+
+        #### Temporary solution due to few failure.
+        run_pacstrap = installer.pacstrap()
+        while run_pacstrap != 0:
+            if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
+                run_pacstrap = installer.pacstrap()
+            else:
+                break
         installer.fstab()
         installer.chroot()
 
