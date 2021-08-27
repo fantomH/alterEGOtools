@@ -397,7 +397,12 @@ class Installer:
         execute(f"rm -rf /var/lib/pacman/sync")
         execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
         execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
+        execute(f"sed -i -e '/mirror.0xem.ma/d' /etc/pacman.d/mirrorlist")
         execute(f"pacman -Syy --noconfirm archlinux-keyring")
+
+        with open('/etc/pacman.d/mirrorlist', 'r') as fIN:
+            print(fIN.read())
+        Msg.console(f":: {_green}TEST...", wait=20)
 
         Msg.console(f":: {_green}Starting pacstrap...", wait=0)
         pkgs_list = ' '.join(packages('pacstrap', self.mode))
@@ -408,7 +413,7 @@ class Installer:
         #### Temporary solution due to few failure.
         while run_pacstrap.returncode != 0:
             if input(f":: {_green}Re-run pacstrap [Y/n]? {_RESET}").lower() in ['y', 'yes']:
-                installer.pacstrap()
+                installer.pacstrap(self)
             else:
                 break
 
