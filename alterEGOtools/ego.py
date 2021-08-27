@@ -395,9 +395,8 @@ class Installer:
     def pacstrap(self):
 
         execute(f"rm -rf /var/lib/pacman/sync")
-        execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=CA&country=US&protocol=http&protocol=https&ip_version=4'")
+        execute(f"curl -o /etc/pacman.d/mirrorlist 'https://archlinux.org/mirrorlist/?country=US&protocol=http&protocol=https&ip_version=4'")
         execute(f"sed -i -e 's/\#Server/Server/g' /etc/pacman.d/mirrorlist")
-        execute(f"sed -i -e '/mirror.0xem.ma/d' /etc/pacman.d/mirrorlist")
         execute(f"pacman -Syy --noconfirm archlinux-keyring")
 
         Msg.console(f":: {_green}Starting pacstrap...", wait=0)
