@@ -4,7 +4,7 @@
 ##
 ## ego.py
 ##   created        : 2021-06-05 00:03:38 UTC
-##   updated        : 2021-08-23 19:28:44 UTC
+##   updated        : 2021-08-26 11:56:42 UTC
 ##   description    : Deploy and update alterEGO Linux.
 ## ____________________________________________________________________________
 
@@ -33,126 +33,126 @@ user = 'ghost'
 user_passwd = 'password1'
 
 pkgs = {
-        'alsa-utils':               'niceguy',
-        'arp-scan':                 'hack-cli',
+        'alsa-utils':               'nice',
+        'arp-scan':                 'hack',
         'base':                     'minimal',
         'base-devel':               'minimal',
-        'bat':                      'niceguy',
-        'bc':                       'niceguy',
-        'bind':                     'niceguy',
-        'binwalk':                  'full',
-        'bleachbit':                'niceguy',
-        'brave-bin':                'aur-gui',
-        'burpsuite':                'aur-hack-gui',
-        'cmatrix':                  'full',
-        'code':                     'niceguy',
-        'cronie':                   'niceguy',
-        'dirbuster':                'aur-hack-gui',
-        'dos2unix':                 'niceguy',
-        'entr':                     'niceguy',
-        'exfat-utils':              'niceguy',
-        'feh':                      'niceguy',
-        'ffmpeg':                   'niceguy',
-        'firefox':                  'niceguy',
-        'freerdp':                  'niceguy',
+        'bat':                      'nice',
+        'bc':                       'minimal',
+        'bind':                     'nice',
+        'binwalk':                  'hack',
+        'bleachbit':                'nice',
+        'brave-bin':                'aur-nice',
+        'burpsuite':                'aur-hack',
+        'cmatrix':                  'hack',
+        'code':                     'nice',
+        'cronie':                   'minimal',
+        'dirbuster':                'aur-hack',
+        'dos2unix':                 'minimal',
+        'entr':                     'nice',
+        'exfat-utils':              'nice',
+        'feh':                      'nice',
+        'ffmpeg':                   'nice',
+        'firefox':                  'nice',
+        'freerdp':                  'nice',
         'fzf':                      'minimal',
-        'gimp':                     'niceguy',
+        'gimp':                     'nice',
         'git':                      'minimal',
-        'gnu-netcat':               'niceguy',
-        'go':                       'niceguy',
-        'gobuster-git':             'aur-hack-cli',
-        'gromit-mpx-git':           'aur-gui',
+        'gnu-netcat':               'hack',
+        'go':                       'nice',
+        'gobuster-git':             'aur-hack',
+        'gromit-mpx-git':           'aur-nice',
         'grub':                     'minimal',
-        'htop':                     'niceguy',
-        'i3-gaps':                  'niceguy',
-        'imagemagick':              'niceguy',
-        'inkscape':                 'niceguy',
-        'inxi':                     'aur-minimal',
-        'john':                     'full',
-        'jq':                       'niceguy',
-        'jre11-openjdk':            'full',
-        'libreoffice-fresh':        'niceguy',
-        'librespeed-cli-bin':       'aur-cli',
+        'htop':                     'nice',
+        'i3-gaps':                  'nice',
+        'imagemagick':              'nice',
+        'inkscape':                 'nice',
+        'inxi':                     'aur-nice',
+        'john':                     'hack',
+        'jq':                       'nice',
+        'jre11-openjdk':            'hack',
+        'libreoffice-fresh':        'nice',
+        'librespeed-cli-bin':       'aur-nice',
         'linux':                    'minimal',
         'lynx':                     'minimal',
         'man-db':                   'minimal',
         'man-pages':                'minimal',
-        'mariadb-clients':          'full',
-        'metasploit':               'full',
-        'mlocate':                  'niceguy',
-        'mtools':                   'niceguy',
-        'mtr':                      'full',
-        'net-tools':                'full',
+        'mariadb-clients':          'hack',
+        'metasploit':               'hack',
+        'mlocate':                  'nice',
+        'mtools':                   'nice',
+        'mtr':                      'hack',
+        'net-tools':                'hack',
         'networkmanager':           'minimal',
-        'nfs-utils':                'niceguy',
-        'nikto':                    'full',
-        'nmap':                     'full',
-        'notify-osd':               'niceguy',
-        'ntfs-3g':                  'niceguy',
+        'nfs-utils':                'nice',
+        'nikto':                    'hack',
+        'nmap':                     'nice',
+        'notify-osd':               'nice',
+        'ntfs-3g':                  'nice',
         'openssh':                  'minimal',
         'openvpn':                  'minimal',
-        'p7zip':                    'full',
-        'pandoc-bin':               'aur-cli',
-        'pavucontrol':              'niceguy',
-        'perl-image-exiftool':      'full',
-        'php':                      'full',
-        'polkit-gnome':             'niceguy',
-        'postgresql':               'full',
-        'powershell-bin':           'aur-cli',
-        'pptpclient':               'niceguy',
-        'pulseaudio':               'niceguy',
-        'pv':                       'full',
-        'python-beautifulsoup4':    'full',
-        'python-pandas':            'full',
-        'python-pip':               'niceguy',
-        'python-pyaml':             'full',
-        'python-rich':              'full',
-        'qrencode':                 'full',
-        'qtile':                    'niceguy',
-        'ranger':                   'niceguy',
-        'remmina':                  'niceguy',
+        'p7zip':                    'minimal',
+        'pandoc-bin':               'aur-nice',
+        'pavucontrol':              'nice',
+        'perl-image-exiftool':      'hack',
+        'php':                      'hack',
+        'polkit-gnome':             'nice',
+        'postgresql':               'hack',
+        'powershell-bin':           'aur-nice',
+        'pptpclient':               'nice',
+        'pulseaudio':               'nice',
+        'pv':                       'nice',
+        'python-beautifulsoup4':    'hack',
+        'python-pandas':            'hack',
+        'python-pip':               'nice',
+        'python-pyaml':             'hack',
+        'python-rich':              'hack',
+        'qrencode':                 'hack',
+        'qtile':                    'nice',
+        'ranger':                   'nice',
+        'remmina':                  'nice',
         'rsync':                    'minimal',
-        'rustscan':                 'aur-hack-cli',
-        'screen':                   'niceguy',
-        'screenkey':                'full',
-        #'sddm':                     'full',
-        'shellcheck':               'niceguy',
-        'simple-mtpfs':             'aur-cli',
-        'sqlitebrowser':            'full',
-        'sxiv':                     'niceguy',
-        'tcpdump':                  'full',
-        'tesseract':                'full',
-        'tesseract-data-eng':       'full',
-        'tesseract-data-fra':       'full',
-        'thunar':                   'niceguy',
-        'thunar-volman':            'niceguy',
-        'tidy':                     'full',
-        'tk':                       'full',
+        'rustscan':                 'aur-hack',
+        'screen':                   'nice',
+        'screenkey':                'nice',
+        #'sddm':                     'nice',
+        'shellcheck':               'nice',
+        'simple-mtpfs':             'aur-nice',
+        'sqlitebrowser':            'hack',
+        'sxiv':                     'nice',
+        'tcpdump':                  'hack',
+        'tesseract':                'hack',
+        'tesseract-data-eng':       'hack',
+        'tesseract-data-fra':       'hack',
+        'thunar':                   'nice',
+        'thunar-volman':            'nice',
+        'tidy':                     'hack',
+        'tk':                       'hack',
         'tmux':                     'minimal',
-        'traceroute':               'full',
-        'transmission-gtk':         'full',
-        'tree':                     'niceguy',
+        'traceroute':               'hack',
+        'transmission-gtk':         'nice',
+        'tree':                     'minimal',
         'ufw':                      'minimal',
         'unrar':                    'minimal',
         'unzip':                    'minimal',
         'vim':                      'minimal',
-        'virtualbox-guest-utils':   'niceguy',
-        'w3m':                      'niceguy',
-        'wfuzz-git':                'aur-hack-cli',
+        'virtualbox-guest-utils':   'nice',
+        'w3m':                      'nice',
+        'wfuzz-git':                'aur-hack',
         'wget':                     'minimal',
-        'whois':                    'full',
-        'wireshark-qt':             'full',
-        'xclip':                    'niceguy',
-        'xcompmgr':                 'niceguy',
-        'xdotool':                  'niceguy',
-        'xfce4-terminal':           'niceguy',
-        'xorg-server':              'niceguy',
-        'xorg-xinit':               'niceguy',
-        'xterm':                    'niceguy',
-        'youtube-dl':               'niceguy',
-        'zathura':                  'niceguy',
-        'zathura-pdf-mupdf':        'niceguy',
-        'zbar':                     'full',
+        'whois':                    'hack',
+        'wireshark-qt':             'hack',
+        'xclip':                    'nice',
+        'xcompmgr':                 'nice',
+        'xdotool':                  'nice',
+        'xfce4-terminal':           'nice',
+        'xorg-server':              'nice',
+        'xorg-xinit':               'nice',
+        'xterm':                    'nice',
+        'youtube-dl':               'nice',
+        'zathura':                  'nice',
+        'zathura-pdf-mupdf':        'nice',
+        'zbar':                     'hack',
         }
 
 GitOption = namedtuple('GitOption', ['name', 'remote', 'local', 'mode'])
@@ -277,16 +277,14 @@ def packages(required_by, mode=None):
         if mode == 'minimal':
             pkgs_list = [k for k, v in pkgs.items() if v in ['minimal']]
         elif mode == 'niceguy':
-            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'niceguy', 'cli', 'gui']]
+            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'nice']]
         elif mode == 'beast':
-            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'niceguy', 'cli', 'gui', 'hack-cli', 'hack-gui' 'full']]
+            pkgs_list = [k for k, v in pkgs.items() if v in ['minimal', 'nice', 'hack']]
     elif required_by == 'yay':
-        if mode == 'minimal':
-            pkgs_list = [k for k, v in pkgs.items() if v in ['aur-minimal']]
-        elif mode == 'niceguy':
-            pkgs_list = [k for k, v in pkgs.items() if v in ['aur-minimal', 'aur-cli', 'aur-gui']]
+        if mode == 'niceguy':
+            pkgs_list = [k for k, v in pkgs.items() if v in ['aur-nice']]
         elif mode == 'beast':
-            pkgs_list = [k for k, v in pkgs.items() if v in ['aur-minimal', 'aur-cli', 'aur-gui', 'aur-hack-cli', 'aur-hack-gui']]
+            pkgs_list = [k for k, v in pkgs.items() if v in ['aur-nice', 'aur-hack']]
 
     return pkgs_list
 
@@ -518,15 +516,16 @@ class Installer:
             swap_file.write("/swapfile none swap defaults 0 0")
 
     def aur(self):
-        Msg.console(f":: {_green}Installing YAY...", wait=0)
-        execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
-        execute(f"chown -R {user}:users /opt/yay")
-        execute(f"su {user} -c 'makepkg -si --needed --noconfirm'", cwd='/opt/yay')
+        if self.mode == 'niceguy' or self.mode == 'beast':
+            Msg.console(f":: {_green}Installing YAY...", wait=0)
+            execute(f"git clone https://aur.archlinux.org/yay.git", cwd='/opt')
+            execute(f"chown -R {user}:users /opt/yay")
+            execute(f"su {user} -c 'makepkg -si --needed --noconfirm'", cwd='/opt/yay')
 
-        Msg.console(f":: {_green}Installing AUR packages...", wait=0)
-        pkgs_list = ' '.join(packages('yay', mode=self.mode))
-        Msg.console(f" -> {_blue}Will be installed:\n{pkgs_list}", wait=0)
-        execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
+            Msg.console(f":: {_green}Installing AUR packages...", wait=0)
+            pkgs_list = ' '.join(packages('yay', mode=self.mode))
+            Msg.console(f" -> {_blue}Will be installed:\n{pkgs_list}", wait=0)
+            execute(f"sudo -u {user} /bin/bash -c 'yay -S --noconfirm {pkgs_list}'")
 
     def mandb(self):
         Msg.console(f":: {_green}Generating mandb...", wait=0)
@@ -680,13 +679,5 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-## { NOTES }___________________________________________________________________
-
-    ## [ MODES ]
-    #### MINIMAL <- CLI / BASIC only
-    #### UNDERGROUND <- CLI / HACH
-    #### - pac_cli_hack
-    #### - aur_cli_hack
 
 ## { FIN }_____________________________________________________________________
