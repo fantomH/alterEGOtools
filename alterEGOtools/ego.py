@@ -555,13 +555,8 @@ class HackerLab:
     def __init__(self, mode):
         self.mode = mode
 
-    def dvwa(self):
-        #### Will install the Damn Vulnerable Web App (DVWA) docker.
-        Msg.console(f"{_green}[*]{_RESET} {_bold}Installing the Damn Vulnerable Web App (DVWA) docker image.", wait=5)
-        Msg.console(f"{_blue}[-]{_RESET} {_bold}Starting docker.service...", wait=3)
-        execute(f"systemctl start docker.service")
-        Msg.console(f"{_blue}    [-]{_RESET} {_bold}Downloading DVWA docker image...", wait=3)
-        execute(f"docker run --rm -it -p 8080:8080 vulnerables/web-dvwa")
+    def is_hacker(self):
+        pass
 
 def main():
 
@@ -598,25 +593,22 @@ def main():
         # [ ALL DONE ]
 
         #### Returns from chroot.
-        all_done = input(f":: {_green}Shutdown [Y/n]? ")
-        print(all_done)
-        print(all_done.lower())
+        all_done = input(f"{_green}[*]{_RESET} {_bold}Shutdown [Y/n]? ")
         if all_done.lower() in ['y', 'yes']:
-            Msg.console(f" -> {_blue}Good Bye!", wait=1)
+            Msg.console(f"{_blue}[-]{_RESET} {_bold}Good Bye!", wait=1)
             try:
                 execute(f'umount -R /mnt')
                 execute(f'shutdown now') 
             except:
                 execute(f'shutdown now') 
         else:
-            Msg.console(f" -> {_blue}Do a manual shutdown when ready.", wait=1)
+            Msg.console(f"{_blue}[-]{_RESET} {_bold}Do a manual shutdown when ready.", wait=1)
 
     ## { SYSTEM CONFIGURATION }________________________________________________
 
     if args.sysconfig:
         mode = args.sysconfig
         installer = Installer(mode)
-        hacker = HackerLab(mode)
 
         # [ PACMAN ]
 
@@ -691,8 +683,6 @@ def main():
         installer.bootloader()
         ## [ VIRTUALBOX SERVICES ]
         installer.vbox_services()
-        ## [ DVWA ]
-        hacker.dvwa()
 
     ## { TESTING }_____________________________________________________________
 
