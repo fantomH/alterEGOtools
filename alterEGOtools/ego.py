@@ -4,7 +4,7 @@
 ##
 ## ego.py
 ##   created        : 2021-06-05 00:03:38 UTC
-##   updated        : 2021-08-26 11:56:42 UTC
+##   updated        : 2021-08-31 10:26:42 UTC
 ##   description    : Deploy and update alterEGO Linux.
 ## ____________________________________________________________________________
 
@@ -48,6 +48,7 @@ pkgs = {
         'code':                     'nice',
         'cronie':                   'minimal',
         'dirbuster':                'aur-hack',
+        'docker':                   'hack',
         'dos2unix':                 'minimal',
         'entr':                     'nice',
         'exfat-utils':              'nice',
@@ -267,6 +268,7 @@ class Msg:
 
 _blue = Msg.color('lightblue')
 _green = Msg.color('lightgreen')
+_bold = Msg.color('bold')
 _RESET = Msg.color('reset')
 
 ## { INSTALLER FUNCTIONS }_____________________________________________________
@@ -294,7 +296,7 @@ def shared_bin():
     localEGO_bin = f"{localEGO}/bin"
     files = os.listdir(localEGO_bin)
 
-    Msg.console(f":: {_green}Deploying application to /usr/local/bin...", wait=0)
+    Msg.console(f"{_green}[*]{_RESET} {_bold}Deploying application to /usr/local/bin...", wait=0)
     for f in files:
         Msg.console(f" -> {_blue}{f}", wait=0)
         src = os.path.join(localEGO_bin, f)
@@ -481,7 +483,7 @@ class Installer:
 
         if self.mode == 'beast' or self.mode == 'niceguy':
             Msg.console(f" -> {_blue}Creating user {user}", wait=0)
-            execute(f"useradd -m -g users -G wheel {user}") 
+            execute(f"useradd -m -g users -G wheel,docker {user}") 
             Msg.console(f" -> {_blue}Setting password for {user}", wait=0)
             execute(f"passwd {user}", input=f"{user_passwd}\n{user_passwd}\n")
 
@@ -547,6 +549,20 @@ class Installer:
             execute(f'systemctl start vboxservice.service')
             execute(f'systemctl enable vboxservice.service')
 
+
+class HackerLab:
+
+    def __init__(self, mode):
+        self.mode = mode
+
+    def dvwa(self):
+        #### Will install the Damn Vulnerable Web App (DVWA) docker.
+        Msg.console(f"{_green}[*]{_RESET} {_bold}Installing the Damn Vulnerable Web App (DVWA) docker image.", wait=5)
+        Msg.console(f"{_blue}[-]{_RESET} {_bold}Starting docker.service...", wait=3)
+        execute(f"systemctl start docker.service")
+        Msg.console(f"{_blue}    [-]{_RESET} {_bold}Downloading DVWA docker image...", wait=3)
+        execute(f"docker run --rm -it -p 8080:8080 vulnerables/web-dvwa")
+
 def main():
 
     parser = argparse.ArgumentParser()
@@ -561,7 +577,7 @@ def main():
 
     if args.install:
         mode = args.install
-        Msg.console(f":: {_green}This will install AlterEGO Linux in {mode} mode...", wait=3)
+        Msg.console(f"{_green}[*]{_RESET} {_bold}This will install AlterEGO Linux in {mode} mode...", wait=3)
 
         installer = Installer(mode)
 
@@ -600,6 +616,7 @@ def main():
     if args.sysconfig:
         mode = args.sysconfig
         installer = Installer(mode)
+        hacker = HackerLab(mode)
 
         # [ PACMAN ]
 
@@ -674,6 +691,8 @@ def main():
         installer.bootloader()
         ## [ VIRTUALBOX SERVICES ]
         installer.vbox_services()
+        ## [ DVWA ]
+        hacker.dvwa()
 
     ## { TESTING }_____________________________________________________________
 
