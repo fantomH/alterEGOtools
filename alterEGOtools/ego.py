@@ -4,7 +4,7 @@
 ##
 ## ego.py
 ##   created        : 2021-06-05 00:03:38 UTC
-##   updated        : 2021-09-01 15:33:36 UTC
+##   updated        : 2021-09-06 14:38:31 UTC
 ##   description    : Deploy and update alterEGO Linux.
 ## ____________________________________________________________________________
 
@@ -40,6 +40,7 @@ pkgs = {
         'arp-scan':                 'hack',
         'base':                     'minimal',
         'base-devel':               'minimal',
+        'bash-completion':          'minimal',
         'bat':                      'nice',
         'bc':                       'minimal',
         'bind':                     'nice',
