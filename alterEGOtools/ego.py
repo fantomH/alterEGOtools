@@ -4,7 +4,7 @@
 ##
 ## ego.py
 ##   created        : 2021-06-05 00:03:38 UTC
-##   updated        : 2021-09-06 14:38:31 UTC
+##   updated        : 2021-09-14 03:04:56 UTC
 ##   description    : Deploy and update alterEGO Linux.
 ## ____________________________________________________________________________
 
@@ -66,6 +66,7 @@ pkgs = {
         'gnu-netcat':               'hack',
         'go':                       'nice',
         'gobuster-git':             'aur-hack',
+        'grc':                      'hack',
         'gromit-mpx-git':           'aur-nice',
         'grub':                     'minimal',
         'htop':                     'nice',
@@ -155,6 +156,7 @@ pkgs = {
         'xorg-xinit':               'nice',
         'xterm':                    'nice',
         'youtube-dl':               'nice',
+        'zaproxy':                  'hack',
         'zathura':                  'nice',
         'zathura-pdf-mupdf':        'nice',
         'zbar':                     'hack',
@@ -308,8 +310,8 @@ def shared_bin():
         os.symlink(src, dst)
 
 def shared_resources():
-    # -- TODO: All file copying should be one functions.
-    # .. recursive, copy, symlinks...
+    ##### TODO: All file copying should be one functions.
+    ##... recursive, copy, symlinks...
 
     ## [ bookmarks.db ]
 
@@ -320,7 +322,7 @@ def shared_resources():
     os.symlink(src, dst)
 
 def shared_reverse_shell():
-    #### Deploys reverse shells.
+    ###### Deploys reverse shells.
 
     if not os.path.exists('/usr/local/share/reverse_shell'):
         os.mkdir('/usr/local/share/reverse_shell')
