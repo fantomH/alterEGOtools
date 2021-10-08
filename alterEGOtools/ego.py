@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-## { alterEGO Linux: "Open the vault of knowledge" }---------------------------
-##
-## ego.py
-##   created        : 2021-06-05 00:03:38 UTC
-##   updated        : 2021-09-14 03:04:56 UTC
-##   description    : Deploy and update alterEGO Linux.
-## ____________________________________________________________________________
+## { alterEGO Linux: "Open the vault of knowledge" } ----------------------- ##
+##                                                                           ##
+## ego.py                                                                    ##
+##   created        : 2021-06-05 00:03:38 UTC                                ##
+##   updated        : 2021-09-14 03:04:56 UTC                                ##
+##   description    : Deploy and update alterEGO Linux.                      ##
+## _________________________________________________________________________ ##
 
 #### https://bit.ly/2SlqWzt
 #### https://tiny.cc/alterEGO
@@ -21,7 +21,7 @@ import sys
 import threading
 import time
 
-## { GLOBAL VARIABLES }________________________________________________________
+## [ GLOBAL VARIABLES ] ---------------------------------------------------- ##
 
 gitTOOLS = 'https://github.com/fantomH/alterEGOtools.git'
 gitEGO = 'https://github.com/fantomH/alterEGO.git'
@@ -71,6 +71,7 @@ pkgs = {
         'grub':                     'minimal',
         'htop':                     'nice',
         'i3-gaps':                  'nice',
+        'i3blocks':                 'nice',
         'imagemagick':              'nice',
         'inkscape':                 'nice',
         'inxi':                     'aur-nice',
@@ -168,12 +169,12 @@ git_repositories = [
     GitOption('alterEGO', 'https://github.com/fantomH/alterEGO.git', '/usr/local/alterEGO', ['minimal', 'niceguy', 'beast']),
                         ]
 
-## { UTIL FUNCTIONS }__________________________________________________________
+## [ UTIL FUNCTIONS ] ------------------------------------------------------ ##
 
 def is_virtual_machine():
-    # -- Use `$ systemd-detect-virt`
-    # .. If VirtualBox will return 'oracle'.
-    # .. If not in VM, will return 'none'.
+    #### Use `$ systemd-detect-virt`
+    #... If VirtualBox will return 'oracle'.
+    #... If not in VM, will return 'none'.
     pass
 
 def copy_recursive(src, dst):
@@ -698,4 +699,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-## { FIN }_____________________________________________________________________
+## FIN _____________________________________________________________ ¯\_(ツ)_/¯
