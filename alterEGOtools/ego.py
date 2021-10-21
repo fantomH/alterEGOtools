@@ -4,7 +4,7 @@
 ##                                                                           ##
 ## ego.py                                                                    ##
 ##   created        : 2021-06-05 00:03:38 UTC                                ##
-##   updated        : 2021-09-14 03:04:56 UTC                                ##
+##   updated        : 2021-10-21 09:25:46 UTC                                ##
 ##   description    : Deploy and update alterEGO Linux.                      ##
 ## _________________________________________________________________________ ##
 
@@ -46,6 +46,7 @@ pkgs = {
         'bind':                     'nice',
         'binwalk':                  'hack',
         'bleachbit':                'nice',
+        'bpytop':                   'minimal',
         'brave-bin':                'aur-nice',
         'burpsuite':                'aur-hack',
         'cmatrix':                  'hack',
