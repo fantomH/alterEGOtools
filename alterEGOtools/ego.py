@@ -325,36 +325,36 @@ def shared_resources():
     dst = os.path.join('/usr/local/share', f)
     os.symlink(src, dst)
 
-def shared_reverse_shell():
+def shared_reverse_shells():
     ###### Deploys reverse shells.
 
-    if not os.path.exists('/usr/local/share/reverse_shell'):
-        os.mkdir('/usr/local/share/reverse_shell')
+    if not os.path.exists('/usr/local/share/reverse_shells'):
+        os.mkdir('/usr/local/share/reverse_shells')
 
-    localEGO_reverse_shell = f"{localEGO}/share/reverse_shell"
-    files = os.listdir(localEGO_reverse_shell)
+    localEGO_reverse_shells = f"{localEGO}/share/reverse_shells"
+    files = os.listdir(localEGO_reverse_shells)
 
-    Msg.console(f"{_green}[*]{_RESET} {_bold}Deploying application to /usr/local/share/reverse_shell...", wait=5)
+    Msg.console(f"{_green}[*]{_RESET} {_bold}Deploying application to /usr/local/share/reverse_shells...", wait=5)
     for f in files:
         Msg.console(f"{_blue}[-]{_RESET} {_bold}{f}", wait=1)
-        src = os.path.join(localEGO_reverse_shell, f)
-        dst = os.path.join('/usr/local/share/reverse_shell', f)
+        src = os.path.join(localEGO_reverse_shells, f)
+        dst = os.path.join('/usr/local/share/reverse_shells', f)
         os.symlink(src, dst)
 
-def shared_wordlist():
+def shared_wordlists():
     #### Deploys wordlists.
 
-    if not os.path.exists('/usr/local/share/wordlist'):
-        os.mkdir('/usr/local/share/wordlist')
+    if not os.path.exists('/usr/local/share/wordlists'):
+        os.mkdir('/usr/local/share/wordlists')
 
-    localEGO_wordlist = f"{localEGO}/share/wordlist"
-    files = os.listdir(localEGO_wordlist)
+    localEGO_wordlists = f"{localEGO}/share/wordlists"
+    files = os.listdir(localEGO_wordlists)
 
-    Msg.console(f"{_green}[*]{_RESET} {_bold}Deploying wordlist to /usr/local/share/wordlist...", wait=5)
+    Msg.console(f"{_green}[*]{_RESET} {_bold}Deploying wordlists to /usr/local/share/wordlists...", wait=5)
     for f in files:
         Msg.console(f"{_blue}[-]{_RESET} {_bold}{f}", wait=5)
-        src = os.path.join(localEGO_wordlist, f)
-        dst = os.path.join('/usr/local/share/wordlist', f)
+        src = os.path.join(localEGO_wordlists, f)
+        dst = os.path.join('/usr/local/share/wordlists', f)
         os.symlink(src, dst)
 
 ## { INSTALLER }_______________________________________________________________
@@ -505,8 +505,8 @@ class Installer:
             Msg.console(f"{_green}[*]{_RESET} {_bold}Deploying shared resources...", wait=5)
             shared_resources()
             shared_bin()
-            shared_wordlist()
-            shared_reverse_shell()
+            shared_wordlists()
+            shared_reverse_shells()
             # -- assets
             copy_recursive(os.path.join(localEGO, 'share', 'assets'), os.path.join(usr_local, 'share', 'assets'))
             # -- backgrounds
