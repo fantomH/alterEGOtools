@@ -174,12 +174,6 @@ git_repositories = [
 
 ## [ UTIL FUNCTIONS ] ------------------------------------------------------ ##
 
-def is_virtual_machine():
-    #### Use `$ systemd-detect-virt`
-    #... If VirtualBox will return 'oracle'.
-    #... If not in VM, will return 'none'.
-    pass
-
 def copy_recursive(src, dst):
     '''
     The src is the source root directory.
